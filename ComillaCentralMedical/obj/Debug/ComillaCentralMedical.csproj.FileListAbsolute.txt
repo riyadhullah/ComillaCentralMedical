@@ -106,3 +106,4 @@ E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCen
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.csproj.CopyComplete
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.dll
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.pdb
+E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.csproj.AssemblyReference.cache
