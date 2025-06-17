@@ -35,35 +35,34 @@ namespace ComillaCentralMedical.Controllers
             {
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
-                    // Get the original file extension (.jpg, .png, etc.)
-                    string extension = Path.GetExtension(ImageFile.FileName);
+                    // Get extension and convert to lowercase
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    string extension = Path.GetExtension(ImageFile.FileName).ToLower();
 
-                    // Set file name as the user's phone number + extension
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("ImageFile", "Only JPG, JPEG, or PNG files are allowed.");
+                        return View();
+                    }
+
+                    // Save file
                     string fileName = user.Phone + extension;
-
-                    // Combine with server path
                     string path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
-
-                    // Save file to the folder
                     ImageFile.SaveAs(path);
-
-                    // Save path in database
                     user.ImagePath = "/Uploads/" + fileName;
                 }
 
-                DateTime JoinDate = DateTime.Today;
-                user.JoinDate = JoinDate;
+                user.JoinDate = DateTime.Today;
                 user.IsActive = false;
 
-                // Save user to database
                 db.Users.Add(user);
                 db.SaveChanges();
-
                 return RedirectToAction("ManageUsers");
             }
 
             return View();
         }
+
 
 
         public ActionResult Details(int id)
