@@ -1,0 +1,80 @@
+﻿@model ComillaCentralMedical.Models.User
+
+@{
+    ViewBag.Title = "User Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center my-4">User Profile</h2>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow p-4">
+                <div class="row">
+                    <!-- Profile Image -->
+                    <div class="col-md-4 text-center">
+                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+                        {
+                            <img src="@Url.Content(Model.ImagePath)" class="img-fluid rounded-circle mb-3" style="width: 180px; height: 180px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="text-muted">No Image</div>
+                        }
+                        <h5 class="mt-2">@Model.FullName</h5>
+                        <span class="badge bg-secondary">@Model.Role</span>
+                    </div>
+
+                    <!-- User Info -->
+                    <div class="col-md-8">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Phone</th>
+                                    <td>@Model.Phone</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td>@Model.Email</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Gender</th>
+                                    <td>@Model.Gender</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Date of Birth</th>
+                                    <td>@Model.DOB.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Join Date</th>
+                                    <td>@Model.JoinDate.ToString("yyyy-MM-dd")</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Address</th>
+                                    <td>@Model.Address</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Active Status</th>
+                                    <td>
+                                        @if (Model.IsActive)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Inactive</span>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-end">
+                            @Html.ActionLink("Back to List", "ManageUsers", null, new { @class = "btn btn-secondary" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

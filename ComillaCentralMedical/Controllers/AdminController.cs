@@ -23,9 +23,9 @@ namespace ComillaCentralMedical.Controllers
             return View(users);
         }
 
-        public ActionResult CreateUsers(User user)
+        public ActionResult CreateUsers()
         {
-            return View(user);
+            return View();
         }
 
         [HttpPost]
@@ -35,16 +35,20 @@ namespace ComillaCentralMedical.Controllers
             {
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
-                    // Get file name and path
-                    string fileName = Path.GetFileName(ImageFile.FileName);
+                    // Get the original file extension (.jpg, .png, etc.)
+                    string extension = Path.GetExtension(ImageFile.FileName);
+
+                    // Set file name as the user's phone number + extension
+                    string fileName = user.Phone + extension;
+
+                    // Combine with server path
                     string path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
 
-                    // Save image to folder
+                    // Save file to the folder
                     ImageFile.SaveAs(path);
 
-                    // Save filename to database
+                    // Save path in database
                     user.ImagePath = "/Uploads/" + fileName;
-                    
                 }
 
                 DateTime JoinDate = DateTime.Today;
@@ -58,9 +62,20 @@ namespace ComillaCentralMedical.Controllers
                 return RedirectToAction("ManageUsers");
             }
 
-            return View(user);
+            return View();
         }
 
+
+        public ActionResult Details(int id)
+        {
+            var user = db.Users.Find(id);
+            if(user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(user);
+        }
 
 
     }

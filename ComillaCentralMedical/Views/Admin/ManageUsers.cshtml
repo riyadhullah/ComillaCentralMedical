@@ -5,49 +5,36 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Manage Users</h2>
+<h2 class="text-center mt-4 mb-4">Manage Users</h2>
 
-<p>
-    @Html.ActionLink("Create New", "CreateUsers")
-</p>
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FullName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Role)
-        </th>
-        <th>Actions</th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.FullName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Role)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-    </tr>
-}
-
+<div class="mb-3 text-end">
+    @Html.ActionLink("Create New", "CreateUsers", null, new { @class = "btn btn-success" })
+</div>
+<hr />
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.Phone)</th>
+            <th>@Html.DisplayNameFor(model => model.Password)</th>
+            <th>@Html.DisplayNameFor(model => model.Role)</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
+                <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                <td>@Html.DisplayFor(modelItem => item.Role)</td>
+                <td class="text-center">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-sm btn-warning me-1" })
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-info me-1" })
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-sm btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
