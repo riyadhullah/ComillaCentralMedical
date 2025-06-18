@@ -63,17 +63,27 @@ namespace ComillaCentralMedical.Controllers
             return View();
         }
 
-
-
         public ActionResult Details(int id)
         {
             var user = db.Users.Find(id);
-            if(user == null)
+            if (user == null)
             {
                 return HttpNotFound();
             }
 
             return View(user);
+        }
+
+        public ActionResult Delete(int id)
+        {
+            var user = db.Users.Find(id);
+            if (user != null)
+            {
+                db.Users.Remove(user);
+                db.SaveChanges();
+            }
+
+            return RedirectToAction("ManageUsers");
         }
 
 

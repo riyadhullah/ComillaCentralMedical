@@ -18,7 +18,7 @@
             <th>@Html.DisplayNameFor(model => model.Phone)</th>
             <th>@Html.DisplayNameFor(model => model.Password)</th>
             <th>@Html.DisplayNameFor(model => model.Role)</th>
-            <th class="text-center">Actions</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +30,7 @@
                 <td>@Html.DisplayFor(modelItem => item.Password)</td>
                 <td>@Html.DisplayFor(modelItem => item.Role)</td>
                 <td class="text-center">
-                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "btn btn-sm btn-warning me-1" })
                     @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-info me-1" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ID }, new { @class = "btn btn-sm btn-danger" })
                 </td>
             </tr>
         }
