@@ -70,11 +70,18 @@
                             </tbody>
                         </table>
                         <div class="text-end">
-                            @using (Html.BeginForm("Delete", "Admin", new { id = Model.ID }, FormMethod.Post, new { id = "deleteForm", @class = "d-inline" }))
-                            {
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
-                            }
+                            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                                @Html.ActionLink("Edit", "EditUser", new { id = Model.ID }, new { @class = "btn btn-primary" })
+
+                                @using (Html.BeginForm("Delete", "Admin", new { id = Model.ID }, FormMethod.Post, new { id = "deleteForm", style = "margin: 0;" }))
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+                                }
+                            </div>
                         </div>
+
+
+
                     </div>
                 </div>
             </div>

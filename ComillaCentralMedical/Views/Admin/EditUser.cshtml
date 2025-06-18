@@ -1,0 +1,82 @@
+﻿@model ComillaCentralMedical.Models.User
+
+@{
+    ViewBag.Title = "Edit User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center my-4">Edit User</h2>
+
+@using (Html.BeginForm("EditUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ID)
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow p-4">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            @if (!string.IsNullOrEmpty(Model.ImagePath))
+                            {
+                                <img src="@Url.Content(Model.ImagePath)" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px;" />
+                            }
+                            else
+                            {
+                                <div class="text-muted">No Image</div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.FullName)
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.Phone)
+                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.Email)
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.Gender)
+                                @Html.DropDownListFor(m => m.Gender, new SelectList(new[] { "Male", "Female", "Other" }), "-- Select Gender --", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Gender, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.DOB)
+                                @Html.TextBoxFor(m => m.DOB, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.JoinDate)
+                                @Html.TextBoxFor(m => m.JoinDate, "{0:yyyy-MM-dd}", new { @type = "date", @class = "form-control" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.Address)
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group mb-3">
+                                @Html.LabelFor(m => m.Role)
+                                @Html.TextBoxFor(m => m.Role, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group form-check mb-3">
+                                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-check-input" })
+                                @Html.LabelFor(m => m.IsActive, new { @class = "form-check-label" })
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+                                @Html.ActionLink("Back to List", "ManageUsers", null, new { @class = "btn btn-secondary" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

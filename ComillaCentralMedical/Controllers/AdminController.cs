@@ -86,6 +86,20 @@ namespace ComillaCentralMedical.Controllers
             return RedirectToAction("ManageUsers");
         }
 
+        public ActionResult EditUser(int id)
+        {
+            var user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
 
+            return View(user);
+        }
+
+
+
+        //Fahad --------------------------------------------------
+        
     }
 }
