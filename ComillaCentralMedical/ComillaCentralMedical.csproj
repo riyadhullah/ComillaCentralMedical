@@ -188,8 +188,13 @@
     <Compile Include="Migrations\202506171215159_RemveRequired.Designer.cs">
       <DependentUpon>202506171215159_RemveRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506182014380_CreateServiceTable.cs" />
+    <Compile Include="Migrations\202506182014380_CreateServiceTable.Designer.cs">
+      <DependentUpon>202506182014380_CreateServiceTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MinimumAgeAttribute.cs" />
+    <Compile Include="Models\Service.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -233,6 +238,10 @@
     <Content Include="Views\Admin\CreateUsers.cshtml" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
+    <Content Include="Views\Admin\CreateService.cshtml" />
+    <Content Include="Views\Admin\ManageServices.cshtml" />
+    <Content Include="Views\Admin\EditService.cshtml" />
+    <Content Include="Views\Admin\DeleteService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -269,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506171215159_RemveRequired.resx">
       <DependentUpon>202506171215159_RemveRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506182014380_CreateServiceTable.resx">
+      <DependentUpon>202506182014380_CreateServiceTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

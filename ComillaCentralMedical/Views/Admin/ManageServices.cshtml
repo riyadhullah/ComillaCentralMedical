@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ComillaCentralMedical.Models.Service>
+
+@{
+    ViewBag.Title = "Manage Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center mt-4 mb-4">Manage Services</h2>
+
+<div class="mb-3 text-end">
+    @Html.ActionLink("Create New Service", "CreateService", "Admin",null, new { @class = "btn btn-success" })
+</div>
+<hr />
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.ServiceName)</th>
+            <th>@Html.DisplayNameFor(model => model.UnitCost)</th>
+            <th>@Html.DisplayNameFor(model => model.UnitType)</th>
+            <th class="text-center">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ServiceName)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitCost)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitType)</td>
+                <td class="text-center">
+                    @Html.ActionLink("Edit", "EditService", new { id = item.ServiceID }, new { @class = "btn btn-sm btn-warning me-1" })
+                    @Html.ActionLink("Delete", "DeleteService", new { id = item.ServiceID }, new { @class = "btn btn-sm btn-danger" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
