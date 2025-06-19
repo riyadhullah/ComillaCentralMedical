@@ -38,6 +38,26 @@
                             @Html.ValidationMessageFor(model => model.UnitType, "", new { @class = "text-danger" })
                         </div>
 
+                        <!-- New Category Field -->
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.Category, "Category", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.Category, new { @class = "form-control", placeholder = "Enter category (e.g., Consultation, Surgery)" })
+                            @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- New Discount Rate Field -->
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.DiscountRate, "Discount Rate (%)", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Enter discount rate" })
+                            @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
+                        </div>
+
+                        <!-- New Availability Checkbox -->
+                        <div class="form-group mb-3 form-check">
+                            @Html.CheckBoxFor(model => model.IsAvailable, new { @class = "form-check-input" })
+                            @Html.LabelFor(model => model.IsAvailable, "Available", new { @class = "form-check-label" })
+                        </div>
+
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary px-4">Save Changes</button>
                             <a href="@Url.Action("ManageServices", "Admin")" class="btn btn-secondary px-4">Cancel</a>

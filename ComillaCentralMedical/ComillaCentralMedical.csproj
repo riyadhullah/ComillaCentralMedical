@@ -192,6 +192,14 @@
     <Compile Include="Migrations\202506182014380_CreateServiceTable.Designer.cs">
       <DependentUpon>202506182014380_CreateServiceTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506191803518_NewServiceTable.cs" />
+    <Compile Include="Migrations\202506191803518_NewServiceTable.Designer.cs">
+      <DependentUpon>202506191803518_NewServiceTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506191816374_NewSeviceTable.cs" />
+    <Compile Include="Migrations\202506191816374_NewSeviceTable.Designer.cs">
+      <DependentUpon>202506191816374_NewSeviceTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MinimumAgeAttribute.cs" />
     <Compile Include="Models\Service.cs" />
@@ -281,6 +289,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506182014380_CreateServiceTable.resx">
       <DependentUpon>202506182014380_CreateServiceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506191803518_NewServiceTable.resx">
+      <DependentUpon>202506191803518_NewServiceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506191816374_NewSeviceTable.resx">
+      <DependentUpon>202506191816374_NewSeviceTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -17,6 +17,9 @@
                     <h5>@Model.ServiceName</h5>
                     <p>Unit Cost: @Model.UnitCost</p>
                     <p>Unit Type: @Model.UnitType</p>
+                    <p>Category: @Model.Category</p>
+                    <p>Discount Rate: @Model.DiscountRate %</p>
+                    <p>Available: @(Model.IsAvailable ? "Yes" : "No")</p>
 
                     @using (Html.BeginForm("DeleteService", "Admin", FormMethod.Post))
                     {
