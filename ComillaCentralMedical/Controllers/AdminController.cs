@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -122,6 +123,7 @@ namespace ComillaCentralMedical.Controllers
             {
                 db.Services.Add(service);
                 db.SaveChanges();
+                TempData["Message"] = "Service added successfully.";
                 return RedirectToAction("ManageServices");
             }
 
@@ -142,44 +144,32 @@ namespace ComillaCentralMedical.Controllers
 
         // POST: EditService
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult EditService(Service service)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(service).State = System.Data.Entity.EntityState.Modified; 
+                db.Entry(service).State = EntityState.Modified;
                 db.SaveChanges();
+                TempData["Message"] = "Service updated successfully.";
                 return RedirectToAction("ManageServices"); 
             }
 
             return View(service);
         }
 
-        // GET: DeleteService
+    
         public ActionResult DeleteService(int id)
         {
-            var service = db.Services.Find(id); // Find the service by ID
-            if (service == null)
+            var user = db.Services.Find(id);
+            if (user != null)
             {
-                return HttpNotFound(); // Return a 404 if the service is not found
+                db.Services.Remove(user);
+                db.SaveChanges();
             }
 
-            return View(service); // Pass the service to the delete confirmation view
+            return RedirectToAction("ManageServices");
         }
 
-        // POST: DeleteService
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteService(Service service)
-        {
-            var serviceToDelete = db.Services.Find(service.ServiceID);
-            if (serviceToDelete != null)
-            {
-                db.Services.Remove(serviceToDelete); 
-                db.SaveChanges(); 
-            }
-
-            return RedirectToAction("ManageServices"); 
-        }
+        
     }
 }

@@ -11,33 +11,56 @@
     @Html.ActionLink("Create New Service", "CreateService", "Admin", null, new { @class = "btn btn-success" })
 </div>
 <hr />
+
 <table class="table table-bordered table-striped table-hover">
     <thead class="table-dark">
         <tr>
-            <th>@Html.DisplayNameFor(model => model.ServiceName)</th>
-            <th>@Html.DisplayNameFor(model => model.UnitCost)</th>
-            <th>@Html.DisplayNameFor(model => model.UnitType)</th>
-            <th>@Html.DisplayNameFor(model => model.Category)</th>
-            <th>@Html.DisplayNameFor(model => model.DiscountRate)</th>
-            <th>@Html.DisplayName("Available")</th>
+            <th class="text-center">ServiceName</th>
+            <th class="text-center">UnitCost</th>
+            <th class="text-center">UnitType</th>
+            <th class="text-center">Category</th>
+            <th class="text-center">DiscountRate</th>
+            <th class="text-center">Available</thclass="text-center">
             <th class="text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@item.ServiceName</td>
+                    <td class="text-center">@item.UnitCost</td>
+                    <td class="text-center">@item.UnitType</td>
+                    <td class="text-center">@item.Category</td>
+                    <td class="text-center">@(item.DiscountRate.HasValue ? item.DiscountRate.Value.ToString("0.##") + "%" : "-")</td>
+                    <td class="text-center">@(item.IsAvailable ? "Yes" : "No")</td>
+                    <td class="text-center">
+                        @Html.ActionLink("Edit", "EditService", new { id = item.ServiceID }, new { @class = "btn btn-sm btn-warning me-1" })
+                        @using (Html.BeginForm("DeleteService", "Admin", new { id = item.ServiceID }, FormMethod.Post, new { id = "deleteForm", style = "display: inline;" }))
+                        {
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.ServiceName)</td>
-                <td>@Html.DisplayFor(modelItem => item.UnitCost)</td>
-                <td>@Html.DisplayFor(modelItem => item.UnitType)</td>
-                <td>@Html.DisplayFor(modelItem => item.Category)</td>
-                <td>@(item.DiscountRate.HasValue ? item.DiscountRate.Value.ToString("0.##") + "%" : "-")</td>
-                <td>@(item.IsAvailable ? "Yes" : "No")</td>
-                <td class="text-center">
-                    @Html.ActionLink("Edit", "EditService", new { id = item.ServiceID }, new { @class = "btn btn-sm btn-warning me-1" })
-                    @Html.ActionLink("Delete", "DeleteService", new { id = item.ServiceID }, new { @class = "btn btn-sm btn-danger" })
-                </td>
+                <td colspan="7" class="text-center">No services available.</td>
             </tr>
         }
     </tbody>
 </table>
+
+@section Scripts {
+    <script type="text/javascript">
+        function confirmDelete(formId) {
+            if (confirm("Are you sure you want to delete this service? This action cannot be undone.")) {
+                document.getElementById("deleteForm").submit();
+            }
+        }
+    </script>
+}
