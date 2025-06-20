@@ -56,6 +56,16 @@
                                 </div>
 
                                 <div class="form-group mb-3">
+                                    <label for="ConfirmPassword">Re-enter Password</label>
+                                    <input type="password" name="ConfirmPassword" class="form-control" />
+                                    @if (ViewBag.PasswordMismatch != null)
+                                    {
+                                        <span class="text-danger">@ViewBag.PasswordMismatch</span>
+                                    }
+                                </div>
+
+
+                                <div class="form-group mb-3">
                                     @Html.LabelFor(model => model.Role)
                                     @Html.DropDownListFor(model => model.Role, new SelectList(
                                         new List<string> { "Admin", "Receptionist", "Accountant" }
