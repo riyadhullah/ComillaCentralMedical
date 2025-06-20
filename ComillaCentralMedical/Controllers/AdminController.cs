@@ -100,75 +100,7 @@ namespace ComillaCentralMedical.Controllers
 
 
 
-        //Fahad --------------------------------------------------
-
-        // GET: ManageServices
-        public ActionResult ManageServices()
-        {
-            var services = db.Services.ToList();
-            return View(services);
-        }
-
-        // GET: CreateService
-        public ActionResult CreateService()
-        {
-            return View();
-        }
-
-        // POST: CreateService
-        [HttpPost]
-        public ActionResult CreateService(Service service)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Services.Add(service);
-                db.SaveChanges();
-                TempData["Message"] = "Service added successfully.";
-                return RedirectToAction("ManageServices");
-            }
-
-            return View(service);
-        }
-
-        // GET: EditService
-        public ActionResult EditService(int id)
-        {
-            var service = db.Services.Find(id); 
-            if (service == null)
-            {
-                return HttpNotFound(); 
-            }
-
-            return View(service); 
-        }
-
-        // POST: EditService
-        [HttpPost]
-        public ActionResult EditService(Service service)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(service).State = EntityState.Modified;
-                db.SaveChanges();
-                TempData["Message"] = "Service updated successfully.";
-                return RedirectToAction("ManageServices"); 
-            }
-
-            return View(service);
-        }
-
-    
-        public ActionResult DeleteService(int id)
-        {
-            var user = db.Services.Find(id);
-            if (user != null)
-            {
-                db.Services.Remove(user);
-                db.SaveChanges();
-            }
-
-            return RedirectToAction("ManageServices");
-        }
+       
 
         
     }
