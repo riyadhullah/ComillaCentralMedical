@@ -37,40 +37,58 @@ namespace ComillaCentralMedical.Controllers
             if (user.Password != confirmPassword)
             {
                 ViewBag.PasswordMismatch = "Password and Confirm Password do not match.";
-                return View(user); // return with error and user input
+                return View(user);
             }
 
-            if (ModelState.IsValid)
+            // ✅ Phone number uniqueness check
+            if (db.Users.Any(u => u.Phone == user.Phone))
             {
-                if (ImageFile != null && ImageFile.ContentLength > 0)
-                {
-                    // Get extension and convert to lowercase
-                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                    string extension = Path.GetExtension(ImageFile.FileName).ToLower();
-
-                    if (!allowedExtensions.Contains(extension))
-                    {
-                        ModelState.AddModelError("ImageFile", "Only JPG, JPEG, or PNG files are allowed.");
-                        return View();
-                    }
-
-                    // Save file
-                    string fileName = user.Phone + extension;
-                    string path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
-                    ImageFile.SaveAs(path);
-                    user.ImagePath = "/Uploads/" + fileName;
-                }
-
-                user.JoinDate = DateTime.Today;
-                user.IsActive = false;
-
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("ManageUsers");
+                ModelState.AddModelError("Phone", "Phone number already exists.");
             }
 
-            return View();
+            // ✅ Email uniqueness check
+            if (db.Users.Any(u => u.Email == user.Email))
+            {
+                ModelState.AddModelError("Email", "Email address already exists.");
+            }
+
+            // ✅ Check if image is missing
+            if (ImageFile == null || ImageFile.ContentLength == 0)
+            {
+                ModelState.AddModelError("ImageFile", "Profile image is required.");
+            }
+
+            // ✅ Stop if any errors
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
+
+            // ✅ Image validation and saving
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            string extension = Path.GetExtension(ImageFile.FileName).ToLower();
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                ModelState.AddModelError("ImageFile", "Only JPG, JPEG, or PNG files are allowed.");
+                return View(user);
+            }
+
+            string fileName = user.Phone + extension;
+            string path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+            ImageFile.SaveAs(path);
+            user.ImagePath = "/Uploads/" + fileName;
+
+            // ✅ Final object setup and save
+            user.JoinDate = DateTime.Today;
+            user.IsActive = false;
+
+            db.Users.Add(user);
+            db.SaveChanges();
+
+            return RedirectToAction("ManageUsers");
         }
+
 
         public ActionResult Details(int id)
         {

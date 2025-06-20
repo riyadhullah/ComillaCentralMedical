@@ -23,7 +23,9 @@
                         <label class="form-label">Profile Image</label>
                         <input type="file" name="ImageFile" class="form-control mb-2" onchange="previewImage(event)" accept=".jpg,.jpeg,.png" />
 
-                        <small class="text-muted">Only JPG or PNG allowed</small>
+
+                        <small class="text-muted">Only JPG, JPEG or PNG allowed</small>
+                        @Html.ValidationMessage("ImageFile", "", new { @class = "text-danger" })
 
                         <div class="mt-3">
                             <img id="preview" src="~/Content/Images/default-user.png" alt="Preview"

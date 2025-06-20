@@ -246,9 +246,6 @@
     <Content Include="Views\Admin\CreateUsers.cshtml" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
-    <Content Include="Views\Admin\CreateService.cshtml" />
-    <Content Include="Views\Admin\ManageServices.cshtml" />
-    <Content Include="Views\Admin\EditService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
