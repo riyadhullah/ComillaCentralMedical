@@ -161,6 +161,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\API\APIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -246,9 +247,7 @@
     <Content Include="Views\Admin\CreateUsers.cshtml" />
     <Content Include="Views\Admin\Details.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
-    <Content Include="Views\Admin\CreateService.cshtml" />
-    <Content Include="Views\Admin\ManageServices.cshtml" />
-    <Content Include="Views\Admin\EditService.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -217,4 +217,3 @@ D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedic
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.CreateServiceTable.resources
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.NewServiceTable.resources
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.NewSeviceTable.resources
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.csproj.AssemblyReference.cache

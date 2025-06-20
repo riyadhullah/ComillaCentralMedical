@@ -20,6 +20,8 @@ namespace ComillaCentralMedical.Controllers
 
         public ActionResult ManageUsers()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
             var users = db.Users.ToList();
             return View(users);
         }
