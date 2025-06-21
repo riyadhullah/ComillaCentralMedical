@@ -29,7 +29,11 @@
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password" required />
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                        <button type="submit" class="btn btn-primary w-20 text-center">Login</button>
+                        <a href="@Url.Action("ClearLogin")" class="btn btn-danger w-20">Clear</a>
+                    </div>
+
                 }
             </div>
         </div>
