@@ -59,6 +59,13 @@ namespace ComillaCentralMedical.Controllers
             ViewBag.Invalid = "Invalid Email/Phone or Password.";
             return View();
         }
+
+        [HttpGet]
+        public ActionResult ClearLogin()
+        {
+            ModelState.Clear();
+            return RedirectToAction("Login", "User");
+        }
         public ActionResult Logout()
         {
             if (Session["FullName"] == null)
