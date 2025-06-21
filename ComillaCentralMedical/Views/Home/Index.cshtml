@@ -1,31 +1,139 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Comilla Central Medical";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<style>
+    /* Custom styles */
+    .hero-section {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 80px 0;
+    }
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+        .hero-section h1 {
+            font-weight: 700;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+        }
+
+    .btn-primary-custom {
+        background-color: #ff6f61;
+        border: none;
+        box-shadow: 0 4px 15px rgba(255,111,97,.4);
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary-custom:hover {
+            background-color: #e65b50;
+            box-shadow: 0 6px 20px rgba(230,91,80,.7);
+        }
+
+    .feature-card {
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        background: white;
+        padding: 30px 20px;
+        height: 100%;
+    }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h5 {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #555;
+            font-size: 1rem;
+        }
+
+    .quick-access-section {
+        background: #121212;
+        color: #f5f5f5;
+        padding: 60px 0;
+    }
+
+        .quick-access-section h3 {
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+    .btn-light-custom {
+        background-color: #333;
+        color: #f5f5f5;
+        font-weight: 600;
+        padding: 14px 32px;
+        border-radius: 50px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        border: none;
+        min-width: 160px;
+    }
+
+        .btn-light-custom:hover {
+            background-color: #ff6f61;
+            color: white;
+            box-shadow: 0 6px 25px rgba(255,111,97,0.7);
+        }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3">Welcome to Our Comilla Central Medical</h1>
+        <p class="lead">Efficiently manage patients, billing, and services in one place.</p>
+        <a href="@Url.Action("Dashboard", "Receptionist")" class="btn btn-primary btn-primary-custom btn-lg me-3">Get Started</a>
+        <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-outline-light btn-lg">Admin Panel</a>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+</section>
+
+<!-- Services Summary -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="mb-5 text-center fw-bold">Our Key Features</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <h5>Patient Management</h5>
+                    <p>Add, update, and track patient admission and discharge easily.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <h5>Billing &amp; Invoices</h5>
+                    <p>Create draft bills, finalize invoices, and track payments efficiently.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card text-center">
+                    <h5>Service Management</h5>
+                    <p>Manage hospital services with customizable pricing and units.</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+</section>
+
+<!-- Quick Links -->
+<section class="quick-access-section text-center">
+    <div class="container">
+        <h3>Quick Access</h3>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <a href="@Url.Action("Dashboard", "Admin")" class="btn btn-light-custom">Admin Login</a>
+            <a href="@Url.Action("Dashboard", "Receptionist")" class="btn btn-light-custom">Receptionist Login</a>
+            <a href="@Url.Action("Dashboard", "Accountant")" class="btn btn-light-custom">Accountant Login</a>
+        </div>
     </div>
-</div>
+</section>
