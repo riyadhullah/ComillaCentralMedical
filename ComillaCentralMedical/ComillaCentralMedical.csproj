@@ -159,6 +159,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Context\MedicalDbContext.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminDashboardController.cs" />
     <Compile Include="Controllers\API\APIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageServiceController.cs" />
@@ -252,6 +253,7 @@
     <Content Include="Views\ManageService\ManageServices.cshtml" />
     <Content Include="Views\ManageService\CreateService.cshtml" />
     <Content Include="Views\ManageService\EditService.cshtml" />
+    <Content Include="Views\AdminDashboard\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

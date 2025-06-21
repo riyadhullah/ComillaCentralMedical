@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Dashboard</h2>
+<div class="container py-5">
+    <!-- Overview Cards -->
+    <div class="row text-center mb-5">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-gradient-primary text-white">
+                <div class="card-body">
+                    <i class="bi bi-people-fill display-4"></i>
+                    <h5 class="card-title mt-3">Total Patients</h5>
+                    <p class="display-4 fw-bold">@ViewBag.TotalPatients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-gradient-success text-white">
+                <div class="card-body">
+                    <i class="bi bi-receipt-cutoff display-4"></i>
+                    <h5 class="card-title mt-3">Total Invoices</h5>
+                    <p class="display-4 fw-bold">@ViewBag.TotalInvoices</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-gradient-warning text-white">
+                <div class="card-body">
+                    <i class="bi bi-cash-coin display-4"></i>
+                    <h5 class="card-title mt-3">Total Income</h5>
+                    <p class="display-4 fw-bold">৳ @ViewBag.TotalIncome.ToString("N2")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="mb-5">
+        <h4 class="text-secondary mb-3">Recent Activities</h4>
+        <ul class="timeline">
+            @if (ViewBag.RecentActivities != null)
+            {
+                foreach (var activity in ViewBag.RecentActivities)
+                {
+                    <li class="timeline-item">
+                        <div class="timeline-icon bg-primary text-white">
+                            <i class="bi bi-person"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <strong>@activity.FullName</strong> performed <em>@activity.Action</em>
+                            <span class="text-muted">@activity.Timestamp.ToString("dd MMM yyyy hh:mm tt")</span>
+                        </div>
+                    </li>
+                }
+            }
+            else
+            {
+                <li class="timeline-item">
+                    <div class="timeline-icon bg-secondary text-white">
+                        <i class="bi bi-exclamation-circle"></i>
+                    </div>
+                    <div class="timeline-content">No recent activities found.</div>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="mb-4">
+        <h4 class="text-secondary mb-3">Quick Links</h4>
+        <div class="d-flex flex-wrap gap-4">
+            <a href="@Url.Action("ManageUsers", "Admin")" class="btn btn-lg btn-outline-primary d-flex align-items-center">
+                <i class="bi bi-people me-2"></i> Manage Users
+            </a>
+            <a href="@Url.Action("ManageServices", "ManageService")" class="btn btn-lg btn-outline-success d-flex align-items-center">
+                <i class="bi bi-tools me-2"></i> Manage Services
+            </a>
+            <a href="@Url.Action("Reports", "Admin")" class="btn btn-lg btn-outline-warning d-flex align-items-center">
+                <i class="bi bi-graph-up-arrow me-2"></i> Reports
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-gradient-primary {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+    }
+
+    .bg-gradient-success {
+        background: linear-gradient(45deg, #28a745, #196f3d);
+    }
+
+    .bg-gradient-warning {
+        background: linear-gradient(45deg, #ffc107, #d39e00);
+    }
+
+    .timeline {
+        list-style: none;
+        padding: 0;
+    }
+
+    .timeline-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .timeline-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .timeline-content {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        flex-grow: 1;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
