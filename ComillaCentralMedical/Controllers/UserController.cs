@@ -45,7 +45,7 @@ namespace ComillaCentralMedical.Controllers
                 switch (user.Role.ToLower())
                 {
                     case "admin":
-                        return RedirectToAction("ManageUsers", "Admin");
+                        return RedirectToAction("Dashboard", "AdminDashboard");
                     case "receptionist":
                         return RedirectToAction("Dashboard", "Receptionist");
                     case "accountant":

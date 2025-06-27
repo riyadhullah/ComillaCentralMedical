@@ -158,12 +158,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Context\MedicalDbContext.cs" />
-    <Compile Include="Controllers\API\ServiceApiController.cs" />
-    <Compile Include="Controllers\ManageUsersController.cs" />
-    <Compile Include="Controllers\API\BillApiController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminDashboardController.cs" />
+    <Compile Include="Controllers\API\APIController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageServiceController.cs" />
-    <Compile Include="Controllers\ReceptionistController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,13 +203,7 @@
     <Compile Include="Migrations\202506191816374_NewSeviceTable.Designer.cs">
       <DependentUpon>202506191816374_NewSeviceTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202506211638101_BillCreate.cs" />
-    <Compile Include="Migrations\202506211638101_BillCreate.Designer.cs">
-      <DependentUpon>202506211638101_BillCreate.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Bill.cs" />
-    <Compile Include="Models\BillItem.cs" />
     <Compile Include="Models\MinimumAgeAttribute.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\User.cs" />
@@ -252,24 +245,19 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\ManageUsers\ManageUsers.cshtml" />
-    <Content Include="Views\ManageUsers\CreateUsers.cshtml" />
-    <Content Include="Views\ManageUsers\Details.cshtml" />
-    <Content Include="Views\ManageUsers\EditUser.cshtml" />
+    <Content Include="Views\Admin\ManageUsers.cshtml" />
+    <Content Include="Views\Admin\CreateUsers.cshtml" />
+    <Content Include="Views\Admin\Details.cshtml" />
+    <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\ManageService\ManageServices.cshtml" />
     <Content Include="Views\ManageService\CreateService.cshtml" />
     <Content Include="Views\ManageService\EditService.cshtml" />
-    <Content Include="Views\Receptionist\Index.cshtml" />
-    <Content Include="Views\Receptionist\Details.cshtml" />
-    <Content Include="Views\Receptionist\Create.cshtml" />
-    <Content Include="Views\Receptionist\Edit.cshtml" />
-    <Content Include="Views\Receptionist\Delete.cshtml" />
+    <Content Include="Views\AdminDashboard\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Uploads\" />
-    <Folder Include="Views\ServiceApi\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -311,9 +299,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506191816374_NewSeviceTable.resx">
       <DependentUpon>202506191816374_NewSeviceTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202506211638101_BillCreate.resx">
-      <DependentUpon>202506211638101_BillCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
