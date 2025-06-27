@@ -71,15 +71,57 @@ namespace ComillaCentralMedical.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(Bill bill)
         {
-            
-
+            // Model-level validation (like Required, Regex, etc.)
             if (!ModelState.IsValid)
+            {
+                // Re-fetch services if returning to view
+                HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
+                if (serviceResponse.IsSuccessStatusCode)
+                {
+                    string serviceJson = await serviceResponse.Content.ReadAsStringAsync();
+                    ViewBag.Services = JsonConvert.DeserializeObject<List<Service>>(serviceJson);
+                }
+                else
+                {
+                    ViewBag.Services = new List<Service>();
+                }
                 return View(bill);
+            }
 
+            // ✅ Custom Validation #1: At least one service
+            if (bill.BillItems == null || !bill.BillItems.Any())
+            {
+                ModelState.AddModelError("", "At least one service must be added.");
+            }
+
+            // ✅ Custom Validation #2: Overall Discount cannot be negative
+            if (bill.OverallDiscountRate < 0)
+            {
+                ModelState.AddModelError("OverallDiscountRate", "Overall discount cannot be negative.");
+            }
+
+            // Return view with errors if any
+            if (!ModelState.IsValid)
+            {
+                HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
+                if (serviceResponse.IsSuccessStatusCode)
+                {
+                    string serviceJson = await serviceResponse.Content.ReadAsStringAsync();
+                    ViewBag.Services = JsonConvert.DeserializeObject<List<Service>>(serviceJson);
+                }
+                else
+                {
+                    ViewBag.Services = new List<Service>();
+                }
+                return View(bill);
+            }
+
+            // ✅ Set required fields before saving
             bill.CreatedAt = DateTime.Now;
             bill.IsConfirmed = false;
             bill.CreatedBy = "Receptionist";
 
+            // ✅ Send data to API
             string json = JsonConvert.SerializeObject(bill);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -88,8 +130,24 @@ namespace ComillaCentralMedical.Controllers
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");
 
+            // Fallback in case API fails
+            ModelState.AddModelError("", "Failed to create bill. Please try again.");
+
+            // Reload services before returning
+            HttpResponseMessage serviceReload = await client.GetAsync("api/ServiceApi");
+            if (serviceReload.IsSuccessStatusCode)
+            {
+                string jsonReload = await serviceReload.Content.ReadAsStringAsync();
+                ViewBag.Services = JsonConvert.DeserializeObject<List<Service>>(jsonReload);
+            }
+            else
+            {
+                ViewBag.Services = new List<Service>();
+            }
+
             return View(bill);
         }
+
 
         // GET: Receptionist/Edit/5
         public async Task<ActionResult> Edit(int id)

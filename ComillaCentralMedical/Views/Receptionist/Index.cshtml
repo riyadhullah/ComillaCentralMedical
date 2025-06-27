@@ -27,19 +27,19 @@
         {
             foreach (var bill in Model)
             {
-                <tr>
-                    <td>@bill.PatientName</td>
-                    <td>@bill.Phone</td>
-                    <td>@bill.TotalAmount</td>
-                    <td>@bill.OverallDiscountRate</td>
-                    <td>@(bill.IsConfirmed ? "Yes" : "No")</td>
-                    <td>@bill.CreatedAt.ToString("g")</td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { id = bill.BillID }, new { @class = "btn btn-info btn-sm" })
-                        @Html.ActionLink("Edit", "Edit", new { id = bill.BillID }, new { @class = "btn btn-warning btn-sm", style = bill.IsConfirmed ? "pointer-events: none; opacity: 0.5;" : "" })
-                        @Html.ActionLink("Delete", "Delete", new { id = bill.BillID }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('Are you sure?');" })
-                    </td>
-                </tr>
+        <tr>
+            <td>@bill.PatientName</td>
+            <td>@bill.Phone</td>
+            <td>@bill.TotalAmount</td>
+            <td>@(bill.OverallDiscountRate ?? 0)</td>
+            <td>@(bill.IsConfirmed ? "Yes" : "No")</td>
+            <td>@bill.CreatedAt.ToString("g")</td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = bill.BillID }, new { @class = "btn btn-info btn-sm" })
+                @Html.ActionLink("Edit", "Edit", new { id = bill.BillID }, new { @class = "btn btn-warning btn-sm", style = bill.IsConfirmed ? "pointer-events: none; opacity: 0.5;" : "" })
+                @Html.ActionLink("Delete", "Delete", new { id = bill.BillID }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('Are you sure?');" })
+            </td>
+        </tr>
             }
         }
         else

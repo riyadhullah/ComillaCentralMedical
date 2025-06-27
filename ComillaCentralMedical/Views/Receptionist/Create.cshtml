@@ -13,23 +13,27 @@
 
 <h2>Create Bill</h2>
 
-@using (Html.BeginForm("Create", "Receptionist", FormMethod.Post))
+@using (Html.BeginForm("Create", "Receptionist", FormMethod.Post, new { onsubmit = "return validateFormBeforeSubmit()" }))
 {
     @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
 
     <div class="form-group mb-3">
         @Html.LabelFor(m => m.PatientName)
-        @Html.TextBoxFor(m => m.PatientName, new { @class = "form-control", placeholder = "Enter patient name" })
+        @Html.TextBoxFor(m => m.PatientName, new { @class = "form-control", placeholder = "Enter patient name", required = "required" })
         @Html.ValidationMessageFor(m => m.PatientName, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group mb-3">
         @Html.LabelFor(m => m.Phone)
-        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter phone number" })
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter phone number", pattern = "01\\d{9}", required = "required" })
         @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
     </div>
 
     <h4 class="mt-4">Add Services</h4>
+    <div id="serviceError" class="text-danger fw-bold mb-2" style="display: none;"></div>
+
     <table class="table table-bordered" id="serviceTable">
         <thead class="table-light">
             <tr>
@@ -39,7 +43,8 @@
                 <th>Discount (%)</th>
                 <th>Quantity</th>
                 <th>Subtotal</th>
-                <th></th>
+                <th>Action</th>
+
             </tr>
         </thead>
         <tbody></tbody>
@@ -49,12 +54,12 @@
 
     <div class="form-group mb-3">
         @Html.LabelFor(m => m.OverallDiscountRate)
-        @Html.TextBoxFor(m => m.OverallDiscountRate, new { @class = "form-control", type = "number", value = "0", onchange = "calculateTotal()" })
+        @Html.TextBoxFor(m => m.OverallDiscountRate, new { @class = "form-control", type = "number", value = "0", min = "0", onchange = "calculateTotal()", id = "OverallDiscountRate" })
         @Html.ValidationMessageFor(m => m.OverallDiscountRate, "", new { @class = "text-danger" })
     </div>
 
     <div class="form-group mb-3">
-        @Html.LabelFor(m => m.TotalAmount)
+        @Html.Label("Total Amount (after discount)")
         @Html.TextBoxFor(m => m.TotalAmount, new { @class = "form-control", type = "number", @readonly = "readonly", id = "TotalAmountBox" })
         @Html.ValidationMessageFor(m => m.TotalAmount, "", new { @class = "text-danger" })
     </div>
@@ -65,43 +70,62 @@
 
 @section Scripts {
     <script>
+        $('#actionHeader').show(); // Show "Action" column heading
+
         let serviceOptions = `@Html.Raw(options.ToString())`;
 
+
         function addService() {
+            const index = $('#serviceTable tbody tr').length;
+
             const row = `<tr>
                 <td>
-                    <select class="form-control service-select" onchange="updateRow(this)">
+                    <select name="BillItems[${index}].ServiceID" class="form-control service-select" onchange="updateRow(this)">
                         <option value="">-- Select Service --</option>
                         ${serviceOptions}
                     </select>
                 </td>
                 <td class="unit-type"></td>
-                <td class="unit-cost"></td>
+                <td class="unit-cost">
+                    <span class="unit-cost-text"></span>
+                    <input type="hidden" name="BillItems[${index}].UnitPrice" class="unit-price" value="0" />
+                </td>
+
                 <td class="discount-rate"></td>
-                <td><input type="number" class="form-control quantity" value="1" min="1" onchange="calculateTotal()" /></td>
+                <td>
+                    <input type="number" name="BillItems[${index}].Quantity" class="form-control quantity" value="1" min="1" onchange="calculateTotal()" />
+                </td>
                 <td class="subtotal">0</td>
-                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                </td>
             </tr>`;
+
             $('#serviceTable tbody').append(row);
         }
 
+
         function updateRow(selectElem) {
             const selected = $(selectElem).find('option:selected');
-            const cost = parseFloat(selected.data('cost'));
+            const cost = parseFloat(selected.data('cost')) || 0;
             const unitType = selected.data('type');
-            const discount = parseFloat(selected.data('discount'));
+            const discount = parseFloat(selected.data('discount')) || 0;
             const row = $(selectElem).closest('tr');
 
             row.find('.unit-type').text(unitType);
-            row.find('.unit-cost').text(cost.toFixed(2));
+            row.find('.unit-cost-text').text(cost.toFixed(2));
+            row.find('.unit-cost input.unit-price').val(cost.toFixed(2));
             row.find('.discount-rate').text(discount.toFixed(2));
 
             calculateTotal();
         }
 
+
+
         function removeRow(button) {
             $(button).closest('tr').remove();
             calculateTotal();
+
         }
 
         function calculateTotal() {
@@ -119,5 +143,33 @@
             const discountedTotal = total * (1 - overallDiscount / 100);
             $('#TotalAmountBox').val(discountedTotal.toFixed(2));
         }
+
+        function validateFormBeforeSubmit() {
+            console.log("Form validation ran"); // Add this
+
+            const serviceCount = $('#serviceTable tbody tr').length;
+            const overallDiscount = parseFloat($('#OverallDiscountRate').val()) || 0;
+
+            // Clear any previous message
+            $('#serviceError').hide().text('');
+
+            if (serviceCount === 0) {
+                $('#serviceError').text("Please add at least one service.").fadeIn();
+
+                setTimeout(() => {
+                    $('#serviceError').fadeOut();
+                }, 5000);
+
+                return false;
+            }
+
+            if (overallDiscount < 0) {
+                alert("Overall discount cannot be negative.");
+                return false;
+            }
+
+            return true;
+        }
+
     </script>
 }
