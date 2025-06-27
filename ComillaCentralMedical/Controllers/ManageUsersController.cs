@@ -10,18 +10,18 @@ using ComillaCentralMedical.Models;
 
 namespace ComillaCentralMedical.Controllers
 {
-    public class AdminController : Controller
+    public class ManageUsersController : Controller
     {
         public MedicalDbContext db;
-        public AdminController() 
+        public ManageUsersController() 
         {
             this.db = new MedicalDbContext();
         }
 
         public ActionResult ManageUsers()
         {
-            if (Session["FullName"] == null)
-                return RedirectToAction("Login", "User");
+            //if (Session["FullName"] == null)
+                //return RedirectToAction("Login", "User");
             var users = db.Users.ToList();
             return View(users);
         }

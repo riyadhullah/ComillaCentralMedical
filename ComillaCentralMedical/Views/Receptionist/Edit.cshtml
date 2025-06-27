@@ -1,0 +1,44 @@
+﻿@model ComillaCentralMedical.Models.Bill
+
+@{
+    ViewBag.Title = "Edit Bill";
+}
+
+<h2>Edit Bill</h2>
+
+@using (Html.BeginForm("Edit", "Receptionist", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.BillID)
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.PatientName)
+        @Html.TextBoxFor(model => model.PatientName, new { @class = "form-control", placeholder = "Enter patient name" })
+        @Html.ValidationMessageFor(model => model.PatientName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.Phone)
+        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", placeholder = "Enter phone number" })
+        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.OverallDiscountRate)
+        @Html.TextBoxFor(model => model.OverallDiscountRate, new { @class = "form-control", placeholder = "Discount rate (%)" })
+        @Html.ValidationMessageFor(model => model.OverallDiscountRate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(model => model.TotalAmount)
+        @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", placeholder = "Total Amount" })
+        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
+    </div>
+
+    @Html.HiddenFor(model => model.IsConfirmed)
+    @Html.HiddenFor(model => model.CreatedAt)
+    @Html.HiddenFor(model => model.CreatedBy)
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="@Url.Action("Index", "Receptionist")" class="btn btn-secondary">Cancel</a>
+}

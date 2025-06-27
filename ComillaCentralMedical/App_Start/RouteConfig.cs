@@ -16,7 +16,7 @@ namespace ComillaCentralMedical
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Admin", action = "ManageUsers", id = UrlParameter.Optional }
+                defaults: new { controller = "ManageUsers", action = "ManageUsers", id = UrlParameter.Optional }
             );
         }
     }

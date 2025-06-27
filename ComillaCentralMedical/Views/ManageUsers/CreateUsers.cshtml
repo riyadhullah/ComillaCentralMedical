@@ -7,7 +7,7 @@
 
 <h2 class="text-center my-4">Create New User</h2>
 
-@using (Html.BeginForm("CreateUsers", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("CreateUsers", "ManageUsers", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 

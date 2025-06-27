@@ -7,7 +7,7 @@
 
 <h2 class="text-center my-4">Edit User Information</h2>
 
-@using (Html.BeginForm("EditUser", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("EditUser", "ManageUsers", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.ID)
