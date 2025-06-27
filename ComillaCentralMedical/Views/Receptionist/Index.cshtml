@@ -1,0 +1,52 @@
+﻿@model List<ComillaCentralMedical.Models.Bill>
+
+@{
+    ViewBag.Title = "All Bills";
+}
+
+<h2 class="mb-4">All Bills</h2>
+
+<p>
+    <a href="@Url.Action("Create", "Receptionist")" class="btn btn-success">Create New Bill</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Patient Name</th>
+            <th>Phone</th>
+            <th>Total Amount</th>
+            <th>Discount (%)</th>
+            <th>Confirmed?</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var bill in Model)
+            {
+                <tr>
+                    <td>@bill.PatientName</td>
+                    <td>@bill.Phone</td>
+                    <td>@bill.TotalAmount</td>
+                    <td>@bill.OverallDiscountRate</td>
+                    <td>@(bill.IsConfirmed ? "Yes" : "No")</td>
+                    <td>@bill.CreatedAt.ToString("g")</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = bill.BillID }, new { @class = "btn btn-info btn-sm" })
+                        @Html.ActionLink("Edit", "Edit", new { id = bill.BillID }, new { @class = "btn btn-warning btn-sm", style = bill.IsConfirmed ? "pointer-events: none; opacity: 0.5;" : "" })
+                        @Html.ActionLink("Delete", "Delete", new { id = bill.BillID }, new { @class = "btn btn-danger btn-sm", onclick = "return confirm('Are you sure?');" })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center text-muted">No bills found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

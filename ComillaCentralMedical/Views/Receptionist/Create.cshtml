@@ -1,0 +1,123 @@
+﻿@model ComillaCentralMedical.Models.Bill
+
+@{
+    ViewBag.Title = "Create Bill";
+    var services = ViewBag.Services as List<ComillaCentralMedical.Models.Service>;
+    var options = new System.Text.StringBuilder();
+
+    foreach (var s in services)
+    {
+        options.Append($"<option value='{s.ServiceID}' data-cost='{s.UnitCost}' data-type='{s.UnitType}' data-discount='{s.DiscountRate}'>{s.ServiceName}</option>");
+    }
+}
+
+<h2>Create Bill</h2>
+
+@using (Html.BeginForm("Create", "Receptionist", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.PatientName)
+        @Html.TextBoxFor(m => m.PatientName, new { @class = "form-control", placeholder = "Enter patient name" })
+        @Html.ValidationMessageFor(m => m.PatientName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.Phone)
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Enter phone number" })
+        @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <h4 class="mt-4">Add Services</h4>
+    <table class="table table-bordered" id="serviceTable">
+        <thead class="table-light">
+            <tr>
+                <th>Service</th>
+                <th>Unit Type</th>
+                <th>Unit Cost</th>
+                <th>Discount (%)</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button type="button" class="btn btn-info mb-3" onclick="addService()">Add Service</button>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.OverallDiscountRate)
+        @Html.TextBoxFor(m => m.OverallDiscountRate, new { @class = "form-control", type = "number", value = "0", onchange = "calculateTotal()" })
+        @Html.ValidationMessageFor(m => m.OverallDiscountRate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.TotalAmount)
+        @Html.TextBoxFor(m => m.TotalAmount, new { @class = "form-control", type = "number", @readonly = "readonly", id = "TotalAmountBox" })
+        @Html.ValidationMessageFor(m => m.TotalAmount, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+    <a href="@Url.Action("Index", "Receptionist")" class="btn btn-secondary">Cancel</a>
+}
+
+@section Scripts {
+    <script>
+        let serviceOptions = `@Html.Raw(options.ToString())`;
+
+        function addService() {
+            const row = `<tr>
+                <td>
+                    <select class="form-control service-select" onchange="updateRow(this)">
+                        <option value="">-- Select Service --</option>
+                        ${serviceOptions}
+                    </select>
+                </td>
+                <td class="unit-type"></td>
+                <td class="unit-cost"></td>
+                <td class="discount-rate"></td>
+                <td><input type="number" class="form-control quantity" value="1" min="1" onchange="calculateTotal()" /></td>
+                <td class="subtotal">0</td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
+            </tr>`;
+            $('#serviceTable tbody').append(row);
+        }
+
+        function updateRow(selectElem) {
+            const selected = $(selectElem).find('option:selected');
+            const cost = parseFloat(selected.data('cost'));
+            const unitType = selected.data('type');
+            const discount = parseFloat(selected.data('discount'));
+            const row = $(selectElem).closest('tr');
+
+            row.find('.unit-type').text(unitType);
+            row.find('.unit-cost').text(cost.toFixed(2));
+            row.find('.discount-rate').text(discount.toFixed(2));
+
+            calculateTotal();
+        }
+
+        function removeRow(button) {
+            $(button).closest('tr').remove();
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            $('#serviceTable tbody tr').each(function () {
+                const cost = parseFloat($(this).find('.unit-cost').text()) || 0;
+                const discount = parseFloat($(this).find('.discount-rate').text()) || 0;
+                const qty = parseInt($(this).find('.quantity').val()) || 1;
+                const subtotal = (cost * qty) * (1 - discount / 100);
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+
+            const overallDiscount = parseFloat($('#OverallDiscountRate').val()) || 0;
+            const discountedTotal = total * (1 - overallDiscount / 100);
+            $('#TotalAmountBox').val(discountedTotal.toFixed(2));
+        }
+    </script>
+}
