@@ -47,7 +47,16 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Comilla Central Medical</a>
+            <a class="navbar-brand" href="@(
+                    Session["Role"]?.ToString() == "Admin"
+                    ? Url.Action("Dashboard", "AdminDashboard")
+                    : Session["Role"]?.ToString() == "Receptionist"
+                    ? Url.Action("Index", "Receptionist")
+                    : Session["Role"]?.ToString() == "Accountant"
+                    ? Url.Action("Report", "Accountant")
+                    : Url.Action("Index", "Home") 
+             )">Comilla Central Medical</a>
+
             <div class="container my-3 text-left ">
                 @RenderSection("PageSpecificButton", required: false)
             </div>
