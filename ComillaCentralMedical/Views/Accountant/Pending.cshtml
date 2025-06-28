@@ -6,12 +6,12 @@
 
 <div class="container mt-4">
     <div class="row mb-3">
-        <div class="col">
-            <h2 class="text-primary">Pending Bills</h2>
+        <div class="align-middle">
+            <h2 class="text-primary text-center">Pending Bills</h2>
         </div>
     </div>
     <div class="mb-3 text-end">
-        @Html.ActionLink("Summary", "Report", "Accountant", null, new { @class = "btn btn-success" })
+        @Html.ActionLink("Accountant Summary", "Report", "Accountant", null, new { @class = "btn btn-success" })
     </div>
 
     @if (TempData["Success"] != null)
@@ -58,7 +58,7 @@
                                 @using (Html.BeginForm("Confirm", "Accountant", FormMethod.Post, new { @class = "d-inline" }))
                                 {
                                     @Html.Hidden("id", bill.BillID)
-                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm this bill?');">Confirm</button>
+                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm this bill?');">Paid</button>
                                 }
                                 
                             </td>

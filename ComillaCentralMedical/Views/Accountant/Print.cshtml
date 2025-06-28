@@ -103,7 +103,7 @@
         };
 
         window.onafterprint = function () {
-            window.location.href = '@Url.Action("Pending", "Accountant", new { id = Model.BillID })';
+            window.location.href = '@Url.Action("Report", "Accountant", new { id = Model.BillID })';
         };
     </script>
 </body>

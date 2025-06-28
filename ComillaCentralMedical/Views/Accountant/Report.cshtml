@@ -6,7 +6,7 @@
 }
 
 <div class="container mt-5">
-    <h1 class="text-center text-primary mb-4">Accountant Report</h1>
+    <h1 class="text-center text-primary mb-4">Accountant Summary</h1>
 
     <!-- Summary Cards -->
     <div class="row">
@@ -18,6 +18,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 mb-3">
             <div class="card border-success shadow-sm">
                 <div class="card-body text-center">
@@ -38,7 +39,10 @@
 
     <!-- Bills Table -->
     <div class="mt-4">
-        <h2 class="text-secondary">Bills Confirmed Today</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-secondary mb-0">Bills Confirmed Today</h2>
+            @Html.ActionLink("Pending Bills", "Pending", "Accountant", null, new { @class = "btn btn-success" })
+        </div>
         <div class="table-responsive shadow-sm">
             <table class="table table-hover table-bordered">
                 <thead class="table-primary text-center">
@@ -47,6 +51,7 @@
                         <th>Patient Name</th>
                         <th>Phone</th>
                         <th>Total Amount</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +64,17 @@
                                 <td class="text-center">@bill.PatientName</td>
                                 <td class="text-center">@bill.Phone</td>
                                 <td class="text-center">@(bill.TotalAmount?.ToString("F2") ?? "N/A") Tk</td>
+                                <td class="text-center">
+                                    @Html.ActionLink("Details", "Details", "Accountant",
+                                           new { id = bill.BillID },
+                                           new { @class = "btn btn-info btn-sm" })
+                                    @using (Html.BeginForm("Print", "Accountant", FormMethod.Post, new { @class = "d-inline" }))
+                                    {
+                                        @Html.Hidden("id", bill.BillID)
+                                        <button type="submit" class="btn btn-success btn-sm" onclick="return Print('Print this bill?');">Print</button>
+                                    }
+
+                                </td>
                             </tr>
                         }
                     }
