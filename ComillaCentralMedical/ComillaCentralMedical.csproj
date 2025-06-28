@@ -226,10 +226,14 @@
     <Compile Include="Migrations\202506272204031_createtable3.Designer.cs">
       <DependentUpon>202506272204031_createtable3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506282025367_RemoveAccountantSummary.cs" />
+    <Compile Include="Migrations\202506282025367_RemoveAccountantSummary.Designer.cs">
+      <DependentUpon>202506282025367_RemoveAccountantSummary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountantSummary.cs" />
     <Compile Include="Models\Bill.cs" />
     <Compile Include="Models\BillItem.cs" />
+    <Compile Include="Models\AccountantSummary.cs" />
     <Compile Include="Models\MinimumAgeAttribute.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\User.cs" />
@@ -351,7 +355,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
@@ -440,6 +443,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506272204031_createtable3.resx">
       <DependentUpon>202506272204031_createtable3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506282025367_RemoveAccountantSummary.resx">
+      <DependentUpon>202506282025367_RemoveAccountantSummary.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
