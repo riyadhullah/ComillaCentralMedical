@@ -1,0 +1,41 @@
+﻿@model List<ComillaCentralMedical.Models.Bill>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-primary text-center">
+        <tr>
+            <th>Bill ID</th>
+            <th>Patient Name</th>
+            <th>Phone</th>
+            <th>Total Amount</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            foreach (var bill in Model)
+            {
+                <tr>
+                    <td class="text-center">@bill.BillID</td>
+                    <td class="text-center">@bill.PatientName</td>
+                    <td class="text-center">@bill.Phone</td>
+                    <td class="text-center">@bill.TotalAmount Tk</td>
+                    <td class="text-center">
+                        @Html.ActionLink("Details", "Details", "Accountant", new { id = bill.BillID }, new { @class = "btn btn-info btn-sm" })
+                        @using (Html.BeginForm("Print", "Accountant", FormMethod.Post, new { @class = "d-inline" }))
+                        {
+                            @Html.Hidden("id", bill.BillID)
+                            <button type="submit" class="btn btn-success btn-sm">Print</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">No bills found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

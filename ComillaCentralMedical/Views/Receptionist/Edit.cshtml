@@ -132,8 +132,22 @@
 
         function removeRow(button) {
             $(button).closest('tr').remove();
+            reindexBillItems();
             calculateTotal();
         }
+
+        function reindexBillItems() {
+            $('#serviceTable tbody tr').each(function (i, row) {
+                $(row).find('select, input, hidden').each(function () {
+                    const name = $(this).attr('name');
+                    if (name) {
+                        const newName = name.replace(/\[\d+\]/, `[${i}]`);
+                        $(this).attr('name', newName);
+                    }
+                });
+            });
+        }
+
 
         function calculateTotal() {
             let total = 0;

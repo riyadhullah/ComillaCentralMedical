@@ -111,15 +111,14 @@
                 <!-- Submit Button -->
                 <div class="form-group text-center mt-4">
                     <input type="submit" value="Update" class="btn btn-primary px-4" />
+                    <a class="btn btn-secondary" href="@Url.Action("ManageUsers", "ManageUsers")">Back</a>
+
                 </div>
             </div>
         </div>
     </div>
 }
 
-<div class="text-center mt-3">
-    @Html.ActionLink("Back to List", "ManageUsers", null, new { @class = "btn btn-link" })
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
