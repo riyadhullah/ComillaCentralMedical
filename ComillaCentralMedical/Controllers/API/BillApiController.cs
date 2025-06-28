@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using System.Data.Entity;
 
 namespace ComillaCentralMedical.Controllers.API
 {
@@ -15,19 +16,27 @@ namespace ComillaCentralMedical.Controllers.API
         // GET: api/BillApi
         public IEnumerable<Bill> GetAllBills()
         {
-            return db.Bills.Include("BillItems").ToList();
+            return db.Bills
+                     .Include("BillItems.Service")
+                     .ToList();
         }
+
+
 
         // GET: api/BillApi/5
         [HttpGet]
         public IHttpActionResult GetBill(int id)
         {
-            var bill = db.Bills.Include("BillItems").FirstOrDefault(b => b.BillID == id);
+            var bill = db.Bills
+                         .Include("BillItems.Service")
+                         .FirstOrDefault(b => b.BillID == id);
+
             if (bill == null)
                 return NotFound();
 
             return Ok(bill);
         }
+
 
         // POST: api/BillApi
         [HttpPost]

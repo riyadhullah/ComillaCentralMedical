@@ -209,5 +209,19 @@ namespace ComillaCentralMedical.Controllers
 
             return new HttpStatusCodeResult(400, "Delete failed.");
         }
+
+        public async Task<ActionResult> Print(int id)
+        {
+            HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                return HttpNotFound();
+
+            string json = await response.Content.ReadAsStringAsync();
+            Bill bill = JsonConvert.DeserializeObject<Bill>(json);
+
+            return View("Print", bill);
+        }
+
     }
 }

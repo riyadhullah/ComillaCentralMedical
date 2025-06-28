@@ -4,60 +4,87 @@
     ViewBag.Title = "Bill Details";
 }
 
-<h2>Bill Details</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">Bill Summary</h3>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Patient Name</dt>
+                <dd class="col-sm-9 fw-bold">@Model.PatientName</dd>
 
-<dl class="dl-horizontal">
-    <dt>Patient Name</dt>
-    <dd>@Model.PatientName</dd>
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9">@Model.Phone</dd>
 
-    <dt>Phone</dt>
-    <dd>@Model.Phone</dd>
+                <dt class="col-sm-3">Created At</dt>
+                <dd class="col-sm-9">@Model.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</dd>
 
-    <dt>Created At</dt>
-    <dd>@Model.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</dd>
+                <dt class="col-sm-3">Created By</dt>
+                <dd class="col-sm-9">@Model.CreatedBy</dd>
 
-    <dt>Created By</dt>
-    <dd>@Model.CreatedBy</dd>
+                <dt class="col-sm-3">Confirmed?</dt>
+                <dd class="col-sm-9">@((Model.IsConfirmed) ? "Yes" : "No")</dd>
 
-    <dt>Confirmed?</dt>
-    <dd>@(Model.IsConfirmed ? "Yes" : "No")</dd>
+                <dt class="col-sm-3">Overall Discount (%)</dt>
+                <dd class="col-sm-9">@((Model.OverallDiscountRate ?? 0).ToString("0"))%</dd>
 
-    <dt>Overall Discount (%)</dt>
-    <dd>@(Model.OverallDiscountRate ?? 0)%</dd>
+                <dt class="col-sm-3">Total Amount</dt>
+                <dd class="col-sm-9 text-success fw-bold">@((Model.TotalAmount.HasValue) ? Model.TotalAmount.Value.ToString("F2") + " Tk" : "—")</dd>
+            </dl>
+        </div>
+    </div>
 
-    <dt>Total Amount</dt>
-    <dd>@(Model.TotalAmount.HasValue ? Model.TotalAmount.Value.ToString("F2") + " Tk" : "—")</dd>
-</dl>
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h4 class="mb-0">Service List</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.BillItems != null && Model.BillItems.Any())
+            {
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Service</th>
+                            <th>Category</th>
+                            <th>Unit Type</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Discount (%)</th>
+                            <th>Line Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.BillItems)
+                        {
+                            <tr>
+                                <td>@(item.Service?.ServiceName ?? "N/A")</td>
+                                <td>@(item.Service?.Category ?? "N/A")</td>
+                                <td>@(item.Service?.UnitType ?? "N/A")</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.UnitPrice.ToString("F2") Tk</td>
+                                <td>@(item.Service?.DiscountRate?.ToString("0") ?? "0")%</td>
+                                <td class="fw-bold">@((item.UnitPrice * item.Quantity * (1 - (item.Service?.DiscountRate ?? 0) / 100)).ToString("F2")) Tk</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-muted">No services added to this bill.</p>
+            }
+        </div>
+    </div>
 
-<h4>Service List</h4>
+    <div class="mt-4 d-flex gap-2">
 
-@if (Model.BillItems != null && Model.BillItems.Any())
-{
-    <table class="table table-striped">
-        <tr>
-            <th>Service</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Discount (%)</th>
-            <th>Line Total</th>
-        </tr>
-        @foreach (var item in Model.BillItems)
-        {
-            <tr>
-                <td>@item.Service?.ServiceName</td>
-                <td>@item.Quantity</td>
-                <td>@item.UnitPrice Tk</td>
-                <td>@item.DiscountRate %</td>
-                <td>@item.TotalPrice.ToString("F2") Tk</td>
-            </tr>
-        }
-    </table>
-}
-else
-{
-    <p><i>No services added to this bill.</i></p>
-}
+        @Html.ActionLink("Edit", "Edit", new { id = Model.BillID }, new { @class = "btn btn-warning" })
 
-<p>
-    @Html.ActionLink("Back to List", "Index")
-</p>
+        @Html.ActionLink("Delete", "Delete", new { id = Model.BillID }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this bill?');" })
+
+        <a href="@Url.Action("Print", "Receptionist", new { id = Model.BillID })" class="btn btn-outline-dark">Print</a>
+
+    </div>
+
+</div>
