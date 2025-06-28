@@ -47,9 +47,9 @@ namespace ComillaCentralMedical.Controllers
                     case "admin":
                         return RedirectToAction("Dashboard", "AdminDashboard");
                     case "receptionist":
-                        return RedirectToAction("Dashboard", "Receptionist");
+                        return RedirectToAction("Index", "Receptionist");
                     case "accountant":
-                        return RedirectToAction("Dashboard", "Accountant");
+                        return RedirectToAction("Report", "Accountant");
                     default:
                         ViewBag.Invalid = "User role is not recognized.";
                         return View();

@@ -2,43 +2,169 @@
 
 @{
     ViewBag.Title = "Edit Bill";
+    var services = ViewBag.Services as List<ComillaCentralMedical.Models.Service> ?? new List<ComillaCentralMedical.Models.Service>();
+    var options = new System.Text.StringBuilder();
+
+    foreach (var s in services)
+    {
+        options.Append($"<option value='{s.ServiceID}' data-cost='{s.UnitCost}' data-type='{s.UnitType}' data-discount='{s.DiscountRate}'>{s.ServiceName}</option>");
+    }
 }
 
 <h2>Edit Bill</h2>
 
-@using (Html.BeginForm("Edit", "Receptionist", FormMethod.Post))
+@using (Html.BeginForm("Edit", "Receptionist", FormMethod.Post, new { onsubmit = "return validateFormBeforeSubmit()" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.BillID)
 
     <div class="form-group mb-3">
-        @Html.LabelFor(model => model.PatientName)
-        @Html.TextBoxFor(model => model.PatientName, new { @class = "form-control", placeholder = "Enter patient name" })
-        @Html.ValidationMessageFor(model => model.PatientName, "", new { @class = "text-danger" })
+        @Html.LabelFor(m => m.PatientName)
+        @Html.TextBoxFor(m => m.PatientName, new { @class = "form-control", required = "required" })
     </div>
 
     <div class="form-group mb-3">
-        @Html.LabelFor(model => model.Phone)
-        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", placeholder = "Enter phone number" })
-        @Html.ValidationMessageFor(model => model.Phone, "", new { @class = "text-danger" })
+        @Html.LabelFor(m => m.Phone)
+        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", required = "required" })
+    </div>
+
+    <h4 class="mt-4">Edit Services</h4>
+    <table class="table table-bordered" id="serviceTable">
+        <thead class="table-light">
+            <tr>
+                <th>Service</th>
+                <th>Unit Type</th>
+                <th>Unit Cost</th>
+                <th>Discount (%)</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.BillItems != null)
+            {
+                var index = 0;
+                foreach (var item in Model.BillItems)
+                {
+            <tr>
+                <td>
+                    @Html.Hidden($"BillItems[{index}].ServiceID", item.ServiceID)
+                    <input type="text" class="form-control"
+                           value="@(item.Service?.ServiceName ?? "N /A")" readonly />
+                </td>
+                <td>
+                    <input type="text" class="form-control unit-type"
+                           value="@(item.Service?.UnitType ?? "N /A")" readonly />
+                </td>
+
+                <td>
+                    <input type="text" class="form-control unit-cost" value="@item.UnitPrice.ToString("F2")" readonly />
+                    <input type="hidden" name="BillItems[@index].UnitPrice" class="unit-price" value="@item.UnitPrice" />
+                </td>
+                <td><input type="text" class="form-control discount-rate" value="@((item.Service?.DiscountRate ?? 0).ToString("0"))" readonly /></td>
+                <td><input type="number" name="BillItems[@index].Quantity" class="form-control quantity" value="@item.Quantity" min="1" onchange="calculateTotal()" /></td>
+                <td class="subtotal fw-bold">0</td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                </td>
+            </tr>
+                    index++;
+                }
+            }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-info mb-3" onclick="addService()">Add Service</button>
+
+    <div class="form-group mb-3">
+        @Html.LabelFor(m => m.OverallDiscountRate)
+        @Html.TextBoxFor(m => m.OverallDiscountRate, new { @class = "form-control", id = "OverallDiscountRate", onchange = "calculateTotal()" })
     </div>
 
     <div class="form-group mb-3">
-        @Html.LabelFor(model => model.OverallDiscountRate)
-        @Html.TextBoxFor(model => model.OverallDiscountRate, new { @class = "form-control", placeholder = "Discount rate (%)" })
-        @Html.ValidationMessageFor(model => model.OverallDiscountRate, "", new { @class = "text-danger" })
+        @Html.Label("Total Amount (after discount)")
+        @Html.TextBoxFor(m => m.TotalAmount, new { @class = "form-control", id = "TotalAmountBox", @readonly = "readonly" })
     </div>
 
-    <div class="form-group mb-3">
-        @Html.LabelFor(model => model.TotalAmount)
-        @Html.TextBoxFor(model => model.TotalAmount, new { @class = "form-control", placeholder = "Total Amount" })
-        @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
-    </div>
-
-    @Html.HiddenFor(model => model.IsConfirmed)
-    @Html.HiddenFor(model => model.CreatedAt)
-    @Html.HiddenFor(model => model.CreatedBy)
-
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-success">Update</button>
     <a href="@Url.Action("Index", "Receptionist")" class="btn btn-secondary">Cancel</a>
+}
+
+@section Scripts {
+    <script>
+        let serviceOptions = `@Html.Raw(options.ToString())`;
+
+        function addService() {
+            const index = $('#serviceTable tbody tr').length;
+            const row = `<tr>
+                <td>
+                    <select name="BillItems[${index}].ServiceID" class="form-control service-select" onchange="updateRow(this)">
+                        <option value="">-- Select --</option>
+                        ${serviceOptions}
+                    </select>
+                </td>
+                <td class="unit-type"></td>
+                <td class="unit-cost">
+                    <input type="hidden" name="BillItems[${index}].UnitPrice" class="unit-price" value="0" />
+                </td>
+                <td class="discount-rate"></td>
+                <td><input type="number" name="BillItems[${index}].Quantity" class="form-control quantity" value="1" min="1" onchange="calculateTotal()" /></td>
+                <td class="subtotal fw-bold">0</td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button></td>
+            </tr>`;
+            $('#serviceTable tbody').append(row);
+        }
+
+        function updateRow(selectElem) {
+            const selected = $(selectElem).find('option:selected');
+            const row = $(selectElem).closest('tr');
+            const cost = parseFloat(selected.data('cost')) || 0;
+            const type = selected.data('type');
+            const discount = parseFloat(selected.data('discount')) || 0;
+            const index = row.index();
+
+            row.find('.unit-type').html(`<input type='text' class='form-control' value='${type}' readonly />`);
+            row.find('.unit-cost').html(`<input type='text' class='form-control' value='${cost.toFixed(2)}' readonly /><input type='hidden' name='BillItems[${index}].UnitPrice' class='unit-price' value='${cost.toFixed(2)}' />`);
+            row.find('.discount-rate').html(`<input type='text' class='form-control' value='${discount.toFixed(2)}' readonly />`);
+            calculateTotal();
+        }
+
+        function removeRow(button) {
+            $(button).closest('tr').remove();
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            $('#serviceTable tbody tr').each(function () {
+                const cost = parseFloat($(this).find('.unit-price').val()) || 0;
+                const qty = parseInt($(this).find('.quantity').val()) || 1;
+                const discount = parseFloat(
+                    $(this).find('.discount-rate input').val() ||
+                    $(this).find('.discount-rate').val()
+                ) || 0;
+
+                const subtotal = cost * qty * (1 - discount / 100);
+                $(this).find('.subtotal').text(subtotal.toFixed(2));
+                total += subtotal;
+            });
+
+            const overallDiscount = parseFloat($('#OverallDiscountRate').val()) || 0;
+            const finalAmount = total * (1 - overallDiscount / 100);
+            $('#TotalAmountBox').val(finalAmount.toFixed(2));
+        }
+
+        function validateFormBeforeSubmit() {
+            if ($('#serviceTable tbody tr').length === 0) {
+                alert("Please add at least one service.");
+                return false;
+            }
+            return true;
+        }
+
+        $(document).ready(function () {
+            calculateTotal();
+        });
+    </script>
 }

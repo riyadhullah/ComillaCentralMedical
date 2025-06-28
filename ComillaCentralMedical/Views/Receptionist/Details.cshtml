@@ -78,13 +78,19 @@
     </div>
 
     <div class="mt-4 d-flex gap-2">
-
-        @Html.ActionLink("Edit", "Edit", new { id = Model.BillID }, new { @class = "btn btn-warning" })
-
-        @Html.ActionLink("Delete", "Delete", new { id = Model.BillID }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this bill?');" })
+        @if (Model.IsConfirmed)
+        {
+            <a class="btn btn-warning disabled" style="pointer-events: none; opacity: 0.6;">Edit</a>
+            <a class="btn btn-danger disabled" style="pointer-events: none; opacity: 0.6;">Delete</a>
+        }
+        else
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.BillID }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Delete", "Delete", new { id = Model.BillID }, new { @class = "btn btn-danger", onclick = "return confirm('Are you sure you want to delete this bill?');" })
+        }
 
         <a href="@Url.Action("Print", "Receptionist", new { id = Model.BillID })" class="btn btn-outline-dark">Print</a>
-
     </div>
+
 
 </div>

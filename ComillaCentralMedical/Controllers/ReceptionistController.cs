@@ -152,6 +152,7 @@ namespace ComillaCentralMedical.Controllers
         // GET: Receptionist/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
+            // Get bill
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -163,26 +164,95 @@ namespace ComillaCentralMedical.Controllers
             if (bill.IsConfirmed)
                 return new HttpStatusCodeResult(403, "Cannot edit confirmed bill.");
 
+            // 🔥 Load services for dropdown
+            HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
+            if (serviceResponse.IsSuccessStatusCode)
+            {
+                string serviceJson = await serviceResponse.Content.ReadAsStringAsync();
+                ViewBag.Services = JsonConvert.DeserializeObject<List<Service>>(serviceJson);
+            }
+            else
+            {
+                ViewBag.Services = new List<Service>();
+            }
+
             return View(bill);
         }
+
 
         // POST: Receptionist/Edit/5
         [HttpPost]
         public async Task<ActionResult> Edit(int id, Bill bill)
         {
+            // Validate
             if (!ModelState.IsValid)
+            {
+                // Refetch services if needed
+                HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
+                if (serviceResponse.IsSuccessStatusCode)
+                {
+                    string serviceJson = await serviceResponse.Content.ReadAsStringAsync();
+                    ViewBag.Services = JsonConvert.DeserializeObject<List<Service>>(serviceJson);
+                }
+                else
+                {
+                    ViewBag.Services = new List<Service>();
+                }
                 return View(bill);
+            }
 
-            string json = JsonConvert.SerializeObject(bill);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            // ✅ Ensure at least one service
+            if (bill.BillItems == null || !bill.BillItems.Any())
+            {
+                ModelState.AddModelError("", "Please add at least one service.");
+                return View(bill);
+            }
 
+            // ✅ Fetch unit price and discount again from service DB to avoid tampering
+            HttpResponseMessage serviceFetch = await client.GetAsync("api/ServiceApi");
+            List<Service> allServices = new List<Service>();
+
+            if (serviceFetch.IsSuccessStatusCode)
+            {
+                string json = await serviceFetch.Content.ReadAsStringAsync();
+                allServices = JsonConvert.DeserializeObject<List<Service>>(json);
+            }
+
+            // ✅ Update UnitPrice, DiscountRate for each item and calculate subtotal
+            double total = 0;
+            foreach (var item in bill.BillItems)
+            {
+                var service = allServices.FirstOrDefault(s => s.ServiceID == item.ServiceID);
+                if (service != null)
+                {
+                    item.UnitPrice = service.UnitCost;
+                    double discount = service.DiscountRate ?? 0;
+                    total += item.UnitPrice * item.Quantity * (1 - discount / 100);
+                }
+            }
+
+            // ✅ Apply overall discount
+            double overallDiscount = bill.OverallDiscountRate ?? 0;
+            bill.TotalAmount = total * (1 - overallDiscount / 100);
+
+            // ✅ Keep original metadata intact
+            bill.IsConfirmed = false;
+
+            // Update via API
+            string updatedJson = JsonConvert.SerializeObject(bill);
+            var content = new StringContent(updatedJson, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PutAsync($"api/BillApi/{id}", content);
 
             if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Bill updated successfully.";
                 return RedirectToAction("Index");
+            }
 
+            TempData["Error"] = "Failed to update bill.";
             return View(bill);
         }
+
 
         // GET: Receptionist/Delete/5
         public async Task<ActionResult> Delete(int id)

@@ -1,0 +1,40 @@
+﻿@model List<ComillaCentralMedical.Models.Bill>
+
+@if (Model.Any())
+{
+    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Phone</th>
+                    <th>Total Amount</th>
+                    <th>Discount (%)</th>
+                    <th>Confirmed?</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bill in Model)
+                {
+                    <tr>
+                        <td>@bill.PatientName</td>
+                        <td>@bill.Phone</td>
+                        <td>@(bill.TotalAmount?.ToString("F2") ?? "N/A") Tk</td>
+                        <td>@(bill.OverallDiscountRate ?? 0)%</td>
+                        <td>@(bill.IsConfirmed ? "Yes" : "No")</td>
+                        <td>@bill.CreatedAt.ToString("g")</td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = bill.BillID }, new { @class = "btn btn-info btn-sm" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-muted">No bills found.</p>
+}

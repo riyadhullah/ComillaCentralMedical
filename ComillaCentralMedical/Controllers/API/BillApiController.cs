@@ -59,7 +59,7 @@ namespace ComillaCentralMedical.Controllers.API
         [HttpPut]
         public IHttpActionResult UpdateBill(int id, Bill updated)
         {
-            var bill = db.Bills.Find(id);
+            var bill = db.Bills.Include("BillItems").FirstOrDefault(b => b.BillID == id);
             if (bill == null)
                 return NotFound();
 
@@ -68,33 +68,45 @@ namespace ComillaCentralMedical.Controllers.API
             {
                 bill.IsConfirmed = true;
                 bill.ConfirmedBy = updated.ConfirmedBy ?? bill.ConfirmedBy;
-                bill.ConfirmedAt = DateTime.Now; // Set timestamp for confirmation
+                bill.ConfirmedAt = DateTime.Now;
             }
 
             if (updated.IsReturned && !bill.IsReturned)
             {
                 bill.IsReturned = true;
                 bill.ReturnReason = updated.ReturnReason;
-                bill.ReturnedAt = DateTime.Now; // Set timestamp for return
+                bill.ReturnedAt = DateTime.Now;
             }
 
-            // Update editable fields only if bill is NOT confirmed
+            // Only allow editing if bill is not confirmed
             if (!bill.IsConfirmed)
             {
+                // Basic info
                 bill.PatientName = updated.PatientName;
                 bill.Phone = updated.Phone;
                 bill.OverallDiscountRate = updated.OverallDiscountRate;
                 bill.TotalAmount = updated.TotalAmount;
 
-                // Reset return details if fields are updated
+                // Clear return info
                 bill.IsReturned = false;
                 bill.ReturnReason = null;
                 bill.ReturnedAt = null;
+
+                // 🔥 Remove old BillItems
+                db.BillItems.RemoveRange(bill.BillItems);
+
+                // 🔁 Add updated BillItems
+                foreach (var item in updated.BillItems)
+                {
+                    item.BillID = bill.BillID; // Important to set FK
+                    db.BillItems.Add(item);
+                }
             }
 
             db.SaveChanges();
             return Ok("Bill updated.");
         }
+
 
         // DELETE: api/BillApi/5
         [HttpDelete]
