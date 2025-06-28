@@ -36,21 +36,18 @@
                             @Html.ValidationMessageFor(model => model.UnitType, "", new { @class = "text-danger" })
                         </div>
 
-                        <!-- New Category field -->
                         <div class="form-group mb-3">
                             @Html.LabelFor(model => model.Category, "Category", new { @class = "form-label" })
                             @Html.TextBoxFor(model => model.Category, new { @class = "form-control", placeholder = "Enter category (e.g., Consultation, Surgery)" })
                             @Html.ValidationMessageFor(model => model.Category, "", new { @class = "text-danger" })
                         </div>
 
-                        <!-- New Discount Rate field -->
                         <div class="form-group mb-3">
                             @Html.LabelFor(model => model.DiscountRate, "Discount Rate (%)", new { @class = "form-label" })
                             @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Enter discount rate (optional)" })
                             @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
                         </div>
 
-                        <!-- New Availability checkbox -->
                         <div class="form-group mb-3 form-check">
                             @Html.CheckBoxFor(model => model.IsAvailable, new { @class = "form-check-input" })
                             @Html.LabelFor(model => model.IsAvailable, "Available", new { @class = "form-check-label" })
@@ -66,3 +63,8 @@
         </div>
     </div>
 </div>
+
+@section PageSpecificButton {
+    <a href="@Url.Action("CreateService", "ManageService")" class="btn btn-primary">Create New Service</a>
+    <a href="@Url.Action("ManageServices", "ManageService")" class="btn btn-primary">Manage Services</a>
+}

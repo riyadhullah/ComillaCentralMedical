@@ -129,4 +129,8 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 </style>
+@section PageSpecificButton {
+    <a href="@Url.Action("ManageUsers", "ManageUsers")" class="btn btn-primary">Manage Users</a>
+    <a href="@Url.Action("ManageServices", "ManageServices")" class="btn btn-primary">Manage Services</a>
+}
 

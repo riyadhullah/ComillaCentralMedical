@@ -30,34 +30,41 @@
             font-size: 0.9rem;
             color: #555;
         }
+
+
+        .custom-heading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            padding:5px;
+            text-overflow: ellipsis;
+            font-size: 1.2rem; /* Adjust size as needed */
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="@Url.Action("Index", "Home")">Comilla Central Medical</a>
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
+            <div class="container my-3 text-left ">
+                @RenderSection("PageSpecificButton", required: false)
+            </div>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     @if (Session["UserId"] != null)
                     {
+                        <h6 class="custom-heading">Welcome, @Session["FullName"]</h6>
                         <li class="nav-item">
-                            <a class="nav-link" href="/User/Logout">Logout (@Session["FullName"])</a>
+                            <a class="btn btn-danger" href="/User/Logout">Logout</a>
                         </li>
+
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link" href="/User/Login">Login</a>
+                            <a class="btn btn-info" href="/User/Login">Login</a>
                         </li>
                     }
                 </ul>
@@ -80,5 +87,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @RenderSection("Scripts", required: false)
+    
 </body>
 </html>

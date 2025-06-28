@@ -60,6 +60,10 @@
         }
     </div>
 </div>
+@section PageSpecificButton {
+    <a href="@Url.Action("CreateService", "ManageService")" class="btn btn-primary">Create New Service</a>
+    <a href="@Url.Action("ManageServices", "ManageService")" class="btn btn-primary">Manage Services</a>
+}
 
 <style>
     .form-group {

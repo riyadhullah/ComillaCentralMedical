@@ -60,7 +60,7 @@
                                     @Html.Hidden("id", bill.BillID)
                                     <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm this bill?');">Paid</button>
                                 }
-                                
+
                             </td>
                         </tr>
                     }
@@ -75,3 +75,7 @@
         </table>
     </div>
 </div>
+@section PageSpecificButton {
+    <a href="@Url.Action("Report", "Accountant")" class="btn btn-primary ">Accountant Summary</a>
+    <a href="@Url.Action("Pending", "Accountant")" class="btn btn-primary">Pending Bills</a>
+}

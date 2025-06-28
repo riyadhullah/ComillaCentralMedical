@@ -98,3 +98,7 @@
         }
     </script>
 }
+@section PageSpecificButton {
+    <a href="@Url.Action("CreateUsers", "ManageUsers")" class="btn btn-primary">Create New User</a>
+    <a href="@Url.Action("ManageUsers", "ManageUsers")" class="btn btn-primary">Manage Users</a>
+}
