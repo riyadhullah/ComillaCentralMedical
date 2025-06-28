@@ -372,10 +372,13 @@
     <Content Include="Views\Accountant\Pending.cshtml" />
     <Content Include="Views\Accountant\Details.cshtml" />
     <Content Include="Views\Accountant\Report.cshtml" />
+    <Content Include="Views\Receptionist\Print.cshtml" />
+    <Content Include="Views\Accountant\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Bill\" />
+    <Folder Include="Views\ServiceApi\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

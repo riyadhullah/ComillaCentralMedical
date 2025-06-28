@@ -42,7 +42,7 @@ namespace ComillaCentralMedical.Controllers
         [HttpPost]
         public async Task<ActionResult> Confirm(int id)
         {
-            // Get the bill from API
+            // Step 1: Get the bill from API
             HttpResponseMessage getResponse = await client.GetAsync($"api/BillApi/{id}");
             if (!getResponse.IsSuccessStatusCode)
             {
@@ -59,7 +59,7 @@ namespace ComillaCentralMedical.Controllers
                 return RedirectToAction("Pending");
             }
 
-            // Mark as confirmed
+            // Step 2: Update the bill
             bill.IsConfirmed = true;
             bill.ConfirmedBy = "Accountant";
             bill.ConfirmedAt = DateTime.Now;
@@ -70,13 +70,14 @@ namespace ComillaCentralMedical.Controllers
             HttpResponseMessage putResponse = await client.PutAsync($"api/BillApi/{id}", content);
             if (putResponse.IsSuccessStatusCode)
             {
-                TempData["Success"] = "Bill confirmed successfully.";
-                return RedirectToAction("Pending");
+                // ✅ Step 3: Redirect to Print view instead of Pending
+                return RedirectToAction("Print", new { id });
             }
 
             TempData["Error"] = "Failed to confirm bill.";
             return RedirectToAction("Pending");
         }
+
 
         /* // POST: Accountant/Return/5
          [HttpPost]
@@ -184,5 +185,20 @@ namespace ComillaCentralMedical.Controllers
 
             return View(bill);
         }
+
+        // GET: Accountant/Print/5
+        public async Task<ActionResult> Print(int id)
+        {
+            HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                return HttpNotFound();
+
+            string json = await response.Content.ReadAsStringAsync();
+            Bill bill = JsonConvert.DeserializeObject<Bill>(json);
+
+            return View("Print", bill); // Reuse the same Print.cshtml
+        }
+
     }
 }
