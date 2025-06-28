@@ -1,40 +1,41 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using ComillaCentralMedical.Context;
-using ComillaCentralMedical.Models;
-
 
 namespace ComillaCentralMedical.Controllers
 {
     public class AdminDashboardController : Controller
     {
-        public MedicalDbContext db;
+        private readonly MedicalDbContext db;
+
         public AdminDashboardController()
         {
-            this.db = new MedicalDbContext();
+            db = new MedicalDbContext();
         }
 
         // GET: Admin/Dashboard
         public ActionResult Dashboard()
         {
-            var totalPatients = 20; //db.Patients.Count();
-            var totalInvoices = 25; //db.Invoices.Count();
-            var totalIncome = 35000; //db.Invoices.Sum(i => (decimal?)i.Total) ?? 0;
-            /*var recentActivities = db.ActivityLogs
-                .OrderByDescending(a => a.Timestamp)
-                .Take(5)
-                .Select(a => new { a.Action, a.Timestamp, a.User.FullName })
-                .ToList();*/
+            var today = DateTime.Today;
 
-            ViewBag.TotalPatients = totalPatients;
+            var todayBills = db.Bills.Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today).ToList();
+            var totalInvoices = db.Bills.Count();
+            var totalIncome = db.Bills.Where(b => b.IsConfirmed && b.TotalAmount.HasValue).Sum(b => b.TotalAmount.Value);
+            var recentActivities = db.Bills.Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today)
+            .Select(b => new
+            {
+               b.BillID,
+               b.PatientName,
+               b.TotalAmount,
+               b.CreatedAt
+            }).ToList();
+
+            ViewBag.TodayInvoices = todayBills;
             ViewBag.TotalInvoices = totalInvoices;
             ViewBag.TotalIncome = totalIncome;
-           // ViewBag.RecentActivities = recentActivities;
+            ViewBag.RecentActivities = recentActivities;
 
             return View();
         }
