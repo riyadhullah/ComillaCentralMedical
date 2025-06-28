@@ -1,130 +1,139 @@
 ﻿@{
-    ViewBag.Title = "Comilla Central Medical";
+    ViewBag.Title = "Home - Comilla Central Medical";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <style>
-    /* Custom styles */
     .hero-section {
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        color: white;
-        padding: 80px 0;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: #fff;
+        padding: 100px 0;
+        text-align: center;
     }
 
         .hero-section h1 {
+            font-size: 3.2rem;
             font-weight: 700;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .hero-section p {
-            font-size: 1.25rem;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.25);
+            font-size: 1.4rem;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            color: #e0e0e0;
         }
 
     .btn-primary-custom {
         background-color: #ff6f61;
         border: none;
-        box-shadow: 0 4px 15px rgba(255,111,97,.4);
-        transition: all 0.3s ease;
+        font-size: 1.1rem;
+        padding: 12px 28px;
+        border-radius: 50px;
+        box-shadow: 0 4px 14px rgba(255, 111, 97, 0.4);
+        transition: all 0.3s ease-in-out;
     }
 
         .btn-primary-custom:hover {
-            background-color: #e65b50;
-            box-shadow: 0 6px 20px rgba(230,91,80,.7);
+            background-color: #e6554a;
+            box-shadow: 0 6px 20px rgba(255, 111, 97, 0.6);
         }
 
     .feature-card {
+        background: #ffffff;
+        padding: 30px 25px;
         border-radius: 15px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        background: white;
-        padding: 30px 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: 0.3s ease-in-out;
         height: 100%;
+        text-align: center;
     }
 
         .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .feature-card h5 {
-            font-weight: 700;
-            color: #333;
+            font-weight: 600;
+            color: #2c3e50;
             margin-bottom: 15px;
         }
 
         .feature-card p {
-            color: #555;
             font-size: 1rem;
+            color: #6c757d;
         }
 
     .quick-access-section {
-        background: #121212;
-        color: #f5f5f5;
+        background-color: #1a1a1a;
+        color: #f8f9fa;
         padding: 60px 0;
+        text-align: center;
     }
 
         .quick-access-section h3 {
-            font-weight: 700;
+            font-size: 1.8rem;
+            font-weight: 600;
             margin-bottom: 30px;
         }
 
     .btn-light-custom {
         background-color: #333;
-        color: #f5f5f5;
+        color: #fff;
+        padding: 12px 26px;
         font-weight: 600;
-        padding: 14px 32px;
         border-radius: 50px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         border: none;
-        min-width: 160px;
+        transition: 0.3s ease-in-out;
     }
 
         .btn-light-custom:hover {
             background-color: #ff6f61;
-            color: white;
-            box-shadow: 0 6px 25px rgba(255,111,97,0.7);
+            color: #fff;
         }
 </style>
 
 <!-- Hero Section -->
-<section class="hero-section text-center">
+<section class="hero-section">
     <div class="container">
-        <h1 class="display-3">Welcome to Our Comilla Central Medical</h1>
-        <p class="lead">Efficiently manage patients, billing, and services in one place.</p>
-        <a href="@Url.Action("Login", "User")" class="btn btn-primary btn-primary-custom btn-lg me-3">Get Started</a>
+        <h1>Welcome to Comilla Central Medical</h1>
+        <p>Streamlined hospital management for billing, patients, and services.</p>
+        <a href="@Url.Action("Login", "User")" class="btn btn-primary-custom">Start Managing</a>
     </div>
 </section>
 
-<!-- Services Summary -->
+<!-- Features Section -->
 <section class="py-5">
     <div class="container">
-        <h2 class="mb-5 text-center fw-bold">Our Key Features</h2>
+        <h2 class="text-center fw-bold mb-5">Core Functionalities</h2>
         <div class="row g-4 justify-content-center">
             <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <h5>Patient Management</h5>
-                    <p>Add, update, and track patient admission and discharge easily.</p>
+                <div class="feature-card">
+                    <h5>Patient Records</h5>
+                    <p>Easily register, update, and view patient details with structured tracking.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <h5>Billing &amp; Invoices</h5>
-                    <p>Create draft bills, finalize invoices, and track payments efficiently.</p>
+                <div class="feature-card">
+                    <h5>Billing Automation</h5>
+                    <p>Generate accurate bills with discounts and real-time total calculations.</p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="feature-card text-center">
-                    <h5>Service Management</h5>
-                    <p>Manage hospital services with customizable pricing and units.</p>
+                <div class="feature-card">
+                    <h5>Service Catalog</h5>
+                    <p>Manage medical services with custom pricing, units, and availability options.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-
-
-
+<!-- Call to Action -->
+<section class="quick-access-section">
+    <div class="container">
+        <h3>Ready to explore?</h3>
+        <a href="@Url.Action("Login", "User")" class="btn btn-light-custom">Login</a>
+    </div>
+</section>
