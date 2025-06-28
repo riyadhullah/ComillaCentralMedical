@@ -8,10 +8,10 @@
 
 <h2 class="mb-4">All Bills</h2>
 
-<div class="mb-3">
+<div class="mb-3 d-flex justify-content-between">
+    <input type="text" id="billSearchBox" class="form-control w-25" placeholder="Search by patient name or phone..." />
     <a href="@Url.Action("Create", "Receptionist")" class="btn btn-success">Create New Bill</a>
 </div>
-
 
 <!-- Bootstrap Tabs -->
 <ul class="nav nav-tabs mb-3" id="billTabs" role="tablist">
@@ -26,9 +26,41 @@
 <!-- Tab Content -->
 <div class="tab-content" id="billTabsContent">
     <div class="tab-pane fade show active" id="pending" role="tabpanel">
-        @Html.Partial("_BillTable", pendingBills)
+        <div id="pendingContent">
+            @Html.Partial("_BillTable", pendingBills)
+        </div>
     </div>
     <div class="tab-pane fade" id="confirmed" role="tabpanel">
-        @Html.Partial("_BillTable", confirmedBills)
+        <div id="confirmedContent">
+            @Html.Partial("_BillTable", confirmedBills)
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#billSearchBox').on('keyup', function () {
+                const query = $(this).val();
+                const activeTab = $('.nav-tabs .nav-link.active').attr('id');
+                const isConfirmed = activeTab === 'confirmed-tab';
+
+                $.ajax({
+                    url: '@Url.Action("SearchBills", "Receptionist")',
+                    type: 'GET',
+                    data: { search: query, confirmed: isConfirmed },
+                    success: function (result) {
+                        if (isConfirmed)
+                            $('#confirmedContent').html(result);
+                        else
+                            $('#pendingContent').html(result);
+                    },
+                    error: function () {
+                        alert("Failed to search bills.");
+                    }
+                });
+            });
+        });
+    </script>
+}

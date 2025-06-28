@@ -23,8 +23,8 @@
                 <dt class="col-sm-3">Created By</dt>
                 <dd class="col-sm-9">@Model.CreatedBy</dd>
 
-                <dt class="col-sm-3">Confirmed?</dt>
-                <dd class="col-sm-9">@((Model.IsConfirmed) ? "Yes" : "No")</dd>
+                <dt class="col-sm-3">Bill Status</dt>
+                <dd class="col-sm-9">@((Model.IsConfirmed) ? "Confirmed" : "Pending")</dd>
 
                 <dt class="col-sm-3">Overall Discount (%)</dt>
                 <dd class="col-sm-9">@((Model.OverallDiscountRate ?? 0).ToString("0"))%</dd>
@@ -90,6 +90,8 @@
         }
 
         <a href="@Url.Action("Print", "Receptionist", new { id = Model.BillID })" class="btn btn-outline-dark">Print</a>
+        <a class="btn btn-secondary" href="@Url.Action("Index", "Receptionist")">Back</a>
+
     </div>
 
 

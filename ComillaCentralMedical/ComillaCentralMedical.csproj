@@ -375,6 +375,9 @@
     <Content Include="Views\Receptionist\Print.cshtml" />
     <Content Include="Views\Accountant\Print.cshtml" />
     <Content Include="Views\Shared\_BillTable.cshtml" />
+    <Content Include="Views\Shared\_UserTable.cshtml" />
+    <Content Include="Views\Shared\_PendingBillTable.cshtml" />
+    <Content Include="Views\Shared\_ConfirmedBillTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,6 +26,18 @@ namespace ComillaCentralMedical.Controllers
             return View(users);
         }
 
+        public PartialViewResult SearchUsers(string search)
+        {
+            var users = db.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                users = users.Where(u => u.FullName.Contains(search) || u.Phone.Contains(search));
+            }
+
+            return PartialView("_UserTable", users.ToList());
+        }
+
         public ActionResult CreateUsers()
         {
             return View();

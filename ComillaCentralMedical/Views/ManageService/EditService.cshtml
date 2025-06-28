@@ -23,7 +23,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.UnitCost, "Unit Cost")
-                @Html.TextBoxFor(model => model.UnitCost, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Enter unit cost" })
+                @Html.TextBoxFor(model => model.UnitCost, new { @class = "form-control", type = "number", step = "1", min = "0.0", placeholder = "Enter unit cost" })
                 @Html.ValidationMessageFor(model => model.UnitCost, "", new { @class = "text-danger" })
             </div>
 
@@ -41,7 +41,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.DiscountRate, "Discount Rate")
-                @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", step = "0.01", placeholder = "Enter discount rate" })
+                @Html.TextBoxFor(model => model.DiscountRate, new { @class = "form-control", type = "number", step = "1", min = "0.0", placeholder = "Enter discount rate" })
                 @Html.ValidationMessageFor(model => model.DiscountRate, "", new { @class = "text-danger" })
             </div>
 

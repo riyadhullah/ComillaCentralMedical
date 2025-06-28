@@ -293,5 +293,32 @@ namespace ComillaCentralMedical.Controllers
             return View("Print", bill);
         }
 
+
+        public async Task<PartialViewResult> SearchBills(string search, bool confirmed)
+        {
+            HttpResponseMessage response = await client.GetAsync("api/BillApi");
+
+            List<Bill> bills = new List<Bill>();
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                bills = JsonConvert.DeserializeObject<List<Bill>>(json);
+            }
+
+            var filtered = bills.Where(b => b.IsConfirmed == confirmed).ToList();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+                filtered = filtered.Where(b =>
+                    (b.PatientName != null && b.PatientName.ToLower().Contains(search)) ||
+                    (b.Phone != null && b.Phone.Contains(search))
+                ).ToList();
+            }
+
+            return PartialView("_BillTable", filtered);
+        }
+
+
     }
 }

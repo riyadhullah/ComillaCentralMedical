@@ -1,38 +1,52 @@
-﻿@model IEnumerable<ComillaCentralMedical.Models.User>
-
-@{
+﻿@{
     ViewBag.Title = "ManageUsers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2 class="text-center mt-4 mb-4">Manage Users</h2>
 
-<div class="mb-3 text-end">
-    @Html.ActionLink("Create New", "CreateUsers", null, new { @class = "btn btn-success" })
+<div class="mb-3 d-flex justify-content-between">
+    <div style="width: 300px;">
+        <input type="text" id="searchBox" class="form-control" placeholder="Search by name or phone..." />
+    </div>
+    <div>
+        @Html.ActionLink("Create New", "CreateUsers", null, new { @class = "btn btn-success" })
+        <a class="btn btn-secondary" href="@Url.Action("Dashboard", "AdminDashboard")">Back</a>
+    </div>
 </div>
+
 <hr />
-<table class="table table-bordered table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FullName)</th>
-            <th>@Html.DisplayNameFor(model => model.Phone)</th>
-            <th>@Html.DisplayNameFor(model => model.Password)</th>
-            <th>@Html.DisplayNameFor(model => model.Role)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
-                <td>@Html.DisplayFor(modelItem => item.Password)</td>
-                <td>@Html.DisplayFor(modelItem => item.Role)</td>
-                <td class="text-center">
-                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-info me-1" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div id="userTableContainer">
+    @Html.Partial("_UserTable", new List<ComillaCentralMedical.Models.User>())
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Initial load
+            loadUsers('');
+
+            // Search on keyup
+            $('#searchBox').on('keyup', function () {
+                let query = $(this).val();
+                loadUsers(query);
+            });
+
+            function loadUsers(searchTerm) {
+                $.ajax({
+                    url: '@Url.Action("SearchUsers", "ManageUsers")',
+                    type: 'GET',
+                    data: { search: searchTerm },
+                    success: function (result) {
+                        $('#userTableContainer').html(result);
+                    },
+                    error: function () {
+                        $('#userTableContainer').html('<p class="text-danger">Failed to load users.</p>');
+                    }
+                });
+            }
+        });
+    </script>
+}

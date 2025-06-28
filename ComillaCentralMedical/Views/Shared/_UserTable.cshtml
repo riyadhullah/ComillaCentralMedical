@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ComillaCentralMedical.Models.User>
+
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().FullName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Phone)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Password)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Role)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.FullName)</td>
+                <td>@Html.DisplayFor(m => item.Phone)</td>
+                <td>@Html.DisplayFor(m => item.Password)</td>
+                <td>@Html.DisplayFor(m => item.Role)</td>
+                <td class="text-center">
+                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-info me-1" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

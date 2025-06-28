@@ -79,96 +79,28 @@ namespace ComillaCentralMedical.Controllers
         }
 
 
-        /* // POST: Accountant/Return/5
-         [HttpPost]
-         public async Task<ActionResult> Return(int id, string returnReason)
-         {
-             if (string.IsNullOrWhiteSpace(returnReason))
-             {
-                 TempData["Error"] = "Return reason is required.";
-                 return RedirectToAction("Pending");
-             }
-
-             HttpResponseMessage getResponse = await client.GetAsync($"api/BillApi/{id}");
-             if (!getResponse.IsSuccessStatusCode)
-             {
-                 TempData["Error"] = "Bill not found.";
-                 return RedirectToAction("Pending");
-             }
-
-             string json = await getResponse.Content.ReadAsStringAsync();
-             Bill bill = JsonConvert.DeserializeObject<Bill>(json);
-
-             if (bill.IsConfirmed || bill.IsReturned)
-             {
-                 TempData["Error"] = "Only pending bills can be returned.";
-                 return RedirectToAction("Pending");
-             }
-
-             // Mark as returned
-             bill.IsReturned = true;
-             bill.ReturnReason = returnReason;
-             bill.ReturnedAt = DateTime.Now;
-
-             string updatedJson = JsonConvert.SerializeObject(bill);
-             var content = new StringContent(updatedJson, Encoding.UTF8, "application/json");
-
-             HttpResponseMessage putResponse = await client.PutAsync($"api/BillApi/{id}", content);
-             if (putResponse.IsSuccessStatusCode)
-             {
-                 TempData["Success"] = "Bill returned successfully.";
-                 return RedirectToAction("Pending");
-             }
-
-             TempData["Error"] = "Failed to return bill.";
-             return RedirectToAction("Pending");
-         }*/
-
-        // GET: Accountant/Report
         public async Task<ActionResult> Report()
         {
-            HttpResponseMessage response = await client.GetAsync("api/BillApi");
-            if (!response.IsSuccessStatusCode)
+            List<Bill> bills = new List<Bill>();
+
+            using (HttpClient client = new HttpClient())
             {
-                TempData["Error"] = "Unable to fetch data.";
-                return RedirectToAction("Pending");
+                client.BaseAddress = new Uri("http://localhost:9118/");
+                HttpResponseMessage response = await client.GetAsync("api/BillApi");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    bills = JsonConvert.DeserializeObject<List<Bill>>(json);
+                }
             }
 
-            string json = await response.Content.ReadAsStringAsync();
-            var allBills = JsonConvert.DeserializeObject<List<Bill>>(json);
+            // Only confirmed bills
+            bills = bills.Where(b => b.IsConfirmed).ToList();
 
-            // Debug: Ensure bills are fetched
-            Console.WriteLine($"Total Bills: {allBills.Count}");
-
-            // Filter bills confirmed today
-            var today = DateTime.Today;
-            var confirmedToday = allBills
-                .Where(b => b.IsConfirmed && b.ConfirmedAt.HasValue && b.ConfirmedAt.Value.Date == today)
-                .ToList();
-
-            foreach (var bill in confirmedToday)
-            {
-                Console.WriteLine($"Bill ID: {bill.BillID}, ConfirmedAt: {bill.ConfirmedAt}, TotalAmount: {bill.TotalAmount}");
-            }
-
-            // Filter bills for the current month
-            var currentMonth = DateTime.Now.Month;
-            var currentYear = DateTime.Now.Year;
-            var monthlyBills = allBills
-                .Where(b => b.IsConfirmed && b.ConfirmedAt.HasValue && b.ConfirmedAt.Value.Month == currentMonth && b.ConfirmedAt.Value.Year == currentYear)
-                .ToList();
-
-            // Prepare the ViewModel
-            var reportViewModel = new AccountantSummary
-            {
-                ConfirmedTodayCount = confirmedToday.Count,
-                TotalIncomeToday = confirmedToday.Sum(b => (decimal)(b.TotalAmount ?? 0)),
-                TotalIncomeThisMonth = monthlyBills.Sum(b => (decimal)(b.TotalAmount ?? 0)),
-                Bills = confirmedToday
-            };
-
-            return View(reportViewModel);
+            return View(bills);
         }
+
 
 
 
@@ -199,6 +131,52 @@ namespace ComillaCentralMedical.Controllers
 
             return View("Print", bill); // Reuse the same Print.cshtml
         }
+
+        public async Task<PartialViewResult> SearchPendingBills(string search)
+        {
+            HttpResponseMessage response = await client.GetAsync("api/BillApi");
+
+            List<Bill> bills = new List<Bill>();
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                bills = JsonConvert.DeserializeObject<List<Bill>>(json);
+            }
+
+            var filtered = bills
+                .Where(b => !b.IsConfirmed && (
+                    string.IsNullOrEmpty(search) ||
+                    (b.PatientName != null && b.PatientName.ToLower().Contains(search.ToLower())) ||
+                    (b.Phone != null && b.Phone.Contains(search))
+                ))
+                .ToList();
+
+            return PartialView("_PendingBillTable", filtered);
+        }
+
+        public async Task<PartialViewResult> SearchConfirmedBills(string search)
+        {
+            HttpResponseMessage response = await client.GetAsync("api/BillApi");
+
+            List<Bill> bills = new List<Bill>();
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                bills = JsonConvert.DeserializeObject<List<Bill>>(json);
+            }
+
+            var filtered = bills
+                .Where(b => b.IsConfirmed && (
+                    string.IsNullOrEmpty(search) ||
+                    (b.PatientName != null && b.PatientName.ToLower().Contains(search.ToLower())) ||
+                    (b.Phone != null && b.Phone.Contains(search))
+                ))
+                .ToList();
+
+            return PartialView("_ConfirmedBillTable", filtered);
+        }
+
+
 
     }
 }

@@ -13,7 +13,7 @@ namespace ComillaCentralMedical.Controllers.API
         [HttpGet]
         public IEnumerable<Service> GetAllServices()
         {
-            return db.Services.ToList();
+            return db.Services.Where(s => s.IsAvailable).ToList();
         }
     }
 }
