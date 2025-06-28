@@ -378,6 +378,7 @@
     <Content Include="Views\Shared\_UserTable.cshtml" />
     <Content Include="Views\Shared\_PendingBillTable.cshtml" />
     <Content Include="Views\Shared\_ConfirmedBillTable.cshtml" />
+    <Content Include="Views\Shared\_ServiceTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

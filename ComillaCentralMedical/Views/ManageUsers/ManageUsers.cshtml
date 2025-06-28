@@ -1,41 +1,45 @@
 ﻿@model IEnumerable<ComillaCentralMedical.Models.User>
 
 @{
-    ViewBag.Title = "ManageUsers";
+    ViewBag.Title = "Manage Users";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2 class="text-center mt-4 mb-4">Manage Users</h2>
 
-<div class="mb-3 text-end">
+<div class="d-flex justify-content-between mb-3">
+    <input type="text" id="userSearchBox" class="form-control w-25" placeholder="Search by name or phone..." />
     @Html.ActionLink("Create New", "CreateUsers", null, new { @class = "btn btn-success" })
 </div>
+
 <hr />
-<table class="table table-bordered table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.FullName)</th>
-            <th>@Html.DisplayNameFor(model => model.Phone)</th>
-            <th>@Html.DisplayNameFor(model => model.Password)</th>
-            <th>@Html.DisplayNameFor(model => model.Role)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.FullName)</td>
-                <td>@Html.DisplayFor(modelItem => item.Phone)</td>
-                <td>@Html.DisplayFor(modelItem => item.Password)</td>
-                <td>@Html.DisplayFor(modelItem => item.Role)</td>
-                <td class="text-center">
-                    @Html.ActionLink("Details", "Details", new { id = item.ID }, new { @class = "btn btn-sm btn-info me-1" })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div id="userTable">
+    @Html.Partial("_UserTable", Model)
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#userSearchBox').on('keyup', function () {
+                const query = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("SearchUsers", "ManageUsers")',
+                    type: 'GET',
+                    data: { search: query },
+                    success: function (result) {
+                        $('#userTable').html(result);
+                    },
+                    error: function () {
+                        alert("Search failed.");
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 @section PageSpecificButton {
     <a href="@Url.Action("CreateUsers", "ManageUsers")" class="btn btn-primary">Create New User</a>
     <a href="@Url.Action("ManageUsers", "ManageUsers")" class="btn btn-primary">Manage Users</a>

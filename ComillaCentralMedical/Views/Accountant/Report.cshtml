@@ -1,8 +1,15 @@
-﻿@model ComillaCentralMedical.Models.AccountantSummary
+﻿@model List<ComillaCentralMedical.Models.Bill>
 
 @{
     ViewBag.Title = "Accountant Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var todayBills = Model.Where(b => b.ConfirmedAt?.Date == DateTime.Today).ToList();
+    var monthBills = Model.Where(b => b.ConfirmedAt?.Month == DateTime.Today.Month && b.ConfirmedAt?.Year == DateTime.Today.Year).ToList();
+
+    var confirmedTodayCount = todayBills.Count;
+    var totalIncomeToday = todayBills.Sum(b => b.TotalAmount ?? 0);
+    var totalIncomeMonth = monthBills.Sum(b => b.TotalAmount ?? 0);
 }
 
 <div class="container mt-5">
@@ -14,7 +21,7 @@
             <div class="card border-primary shadow-sm">
                 <div class="card-body text-center">
                     <h5 class="card-title">Bills Confirmed Today</h5>
-                    <p class="display-5 text-primary">@Model.ConfirmedTodayCount</p>
+                    <p class="display-5 text-primary">@confirmedTodayCount</p>
                 </div>
             </div>
         </div>
@@ -23,72 +30,79 @@
             <div class="card border-success shadow-sm">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Income Today</h5>
-                    <p class="display-5 text-success">@Model.TotalIncomeToday.ToString("F2") Tk</p>
+                    <p class="display-5 text-success">@totalIncomeToday.ToString("F2") Tk</p>
                 </div>
             </div>
         </div>
+
         <div class="col-md-4 mb-3">
             <div class="card border-info shadow-sm">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Income This Month</h5>
-                    <p class="display-5 text-info">@Model.TotalIncomeThisMonth.ToString("F2") Tk</p>
+                    <p class="display-5 text-info">@totalIncomeMonth.ToString("F2") Tk</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bills Table -->
-    <div class="mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-secondary mb-0">Bills Confirmed Today</h2>
-            @Html.ActionLink("Pending Bills", "Pending", "Accountant", null, new { @class = "btn btn-success" })
-        </div>
-        <div class="table-responsive shadow-sm">
-            <table class="table table-hover table-bordered">
-                <thead class="table-primary text-center">
-                    <tr>
-                        <th>Bill ID</th>
-                        <th>Patient Name</th>
-                        <th>Phone</th>
-                        <th>Total Amount</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Bills.Any())
-                    {
-                        foreach (var bill in Model.Bills)
-                        {
-                            <tr>
-                                <td class="text-center">@bill.BillID</td>
-                                <td class="text-center">@bill.PatientName</td>
-                                <td class="text-center">@bill.Phone</td>
-                                <td class="text-center">@(bill.TotalAmount?.ToString("F2") ?? "N/A") Tk</td>
-                                <td class="text-center">
-                                    @Html.ActionLink("Details", "Details", "Accountant",
-                                           new { id = bill.BillID },
-                                           new { @class = "btn btn-info btn-sm" })
-                                    @using (Html.BeginForm("Print", "Accountant", FormMethod.Post, new { @class = "d-inline" }))
-                                    {
-                                        @Html.Hidden("id", bill.BillID)
-                                        <button type="submit" class="btn btn-success btn-sm" onclick="return Print('Print this bill?');">Print</button>
-                                    }
+    <!-- Search + Tabs -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <input type="text" id="billSearchBox" class="form-control w-25" placeholder="Search by name or phone..." />
+        @Html.ActionLink("Pending Bills", "Pending", "Accountant", null, new { @class = "btn btn-success" })
+    </div>
 
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">No bills confirmed today.</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+    <ul class="nav nav-tabs mb-3" id="confirmedTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="today-tab" data-bs-toggle="tab" data-bs-target="#today" type="button" role="tab">Today</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="month-tab" data-bs-toggle="tab" data-bs-target="#month" type="button" role="tab">This Month</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="confirmedTabsContent">
+        <div class="tab-pane fade show active" id="today" role="tabpanel">
+            <div id="todayContent">
+                @Html.Partial("_ConfirmedBillTable", todayBills)
+            </div>
+        </div>
+        <div class="tab-pane fade" id="month" role="tabpanel">
+            <div id="monthContent">
+                @Html.Partial("_ConfirmedBillTable", monthBills)
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#billSearchBox').on('keyup', function () {
+                let query = $(this).val();
+                let activeTab = $('.nav-tabs .nav-link.active').attr('id');
+                let scope = activeTab === 'month-tab' ? 'month' : 'today';
+
+                $.ajax({
+                    url: '@Url.Action("SearchConfirmedBills", "Accountant")',
+                    type: 'GET',
+                    data: { search: query, scope: scope },
+                    success: function (result) {
+                        if (scope === 'month') {
+                            $('#monthContent').html(result);
+                        } else {
+                            $('#todayContent').html(result);
+                        }
+                    },
+                    error: function () {
+                        alert("Search failed. Please try again.");
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 
 @section PageSpecificButton {
     <a href="@Url.Action("Report", "Accountant")" class="btn btn-primary ">Accountant Summary</a>

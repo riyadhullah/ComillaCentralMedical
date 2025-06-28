@@ -85,6 +85,25 @@ namespace ComillaCentralMedical.Controllers
 
             return RedirectToAction("ManageServices");
         }
+
+
+        [HttpGet]
+        public ActionResult SearchServices(string search)
+        {
+            var services = db.Services.AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                search = search.ToLower();
+                services = services.Where(s =>
+                    s.ServiceName.ToLower().Contains(search) ||
+                    s.Category.ToLower().Contains(search) ||
+                    s.UnitType.ToLower().Contains(search));
+            }
+
+            var result = services.OrderBy(s => s.ServiceName).ToList();
+            return PartialView("_ServiceTable", result);
+        }
     }
 
 
