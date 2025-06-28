@@ -20,17 +20,20 @@ namespace ComillaCentralMedical.Controllers
         {
             var today = DateTime.Today;
 
-            var todayBills = db.Bills.Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today).ToList();
+            var todayBills = db.Bills
+                .Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today)
+                .ToList();
+
             var totalInvoices = db.Bills.Count();
-            var totalIncome = db.Bills.Where(b => b.IsConfirmed && b.TotalAmount.HasValue).Sum(b => b.TotalAmount.Value);
-            var recentActivities = db.Bills.Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today)
-            .Select(b => new
-            {
-               b.BillID,
-               b.PatientName,
-               b.TotalAmount,
-               b.CreatedAt
-            }).ToList();
+
+            var totalIncome = db.Bills
+                .Where(b => b.IsConfirmed && b.TotalAmount.HasValue)
+                .Sum(b => b.TotalAmount.Value);
+
+            // ✅ Return full Bill objects (not anonymous)
+            var recentActivities = db.Bills
+                .Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today)
+                .ToList();
 
             ViewBag.TodayInvoices = todayBills;
             ViewBag.TotalInvoices = totalInvoices;

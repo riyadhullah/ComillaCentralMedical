@@ -64,10 +64,26 @@
                 <ul class="navbar-nav ms-auto">
                     @if (Session["UserId"] != null)
                     {
-                        <h6 class="custom-heading">Welcome, @Session["FullName"]</h6>
-                        <li class="nav-item">
-                            <a class="btn btn-danger" href="/User/Logout">Logout</a>
-                        </li>
+                        <ul class="navbar-nav ms-auto">
+                            @if (Session["UserId"] != null)
+                            {
+                                <li class="nav-item d-flex align-items-center me-3">
+                                    <a href="@Url.Action("Profile", "User", new { id = Convert.ToInt32(Session["UserId"]) })" class="custom-heading text-white text-decoration-none">
+                                        👤 Welcome, @Session["FullName"]
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="btn btn-danger" href="@Url.Action("Logout", "User")">Logout</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="btn btn-info" href="@Url.Action("Login", "User")">Login</a>
+                                </li>
+                            }
+                        </ul>
+
 
                     }
                     else

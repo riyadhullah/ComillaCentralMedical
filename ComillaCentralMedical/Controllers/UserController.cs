@@ -41,6 +41,8 @@ namespace ComillaCentralMedical.Controllers
                 Session["UserId"] = user.ID;
                 Session["FullName"] = user.FullName; 
                 Session["Role"] = user.Role;
+                user.IsActive = true;
+                db.SaveChanges();
 
                 switch (user.Role.ToLower())
                 {
@@ -68,14 +70,35 @@ namespace ComillaCentralMedical.Controllers
         }
         public ActionResult Logout()
         {
-            if (Session["FullName"] == null)
-                return RedirectToAction("Login", "User");
+            if (Session["UserId"] != null)
+            {
+                int userId = (int)Session["UserId"];
+                var user = db.Users.FirstOrDefault(u => u.ID == userId);
+                if (user != null)
+                {
+                    user.IsActive = false;
+                    db.SaveChanges(); 
+                }
+            }
 
             Session.Clear();
             Session.Abandon();
             TempData["Logout"] = "Logged out from System.";
-            return View("Login");
+            return RedirectToAction("Login", "User");
         }
+
+
+        public ActionResult Profile(int id)
+        {
+            var user = db.Users.FirstOrDefault(u => u.ID == id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View("Profile", user); // View name is "Profile.cshtml"
+        }
+
 
     }
 }

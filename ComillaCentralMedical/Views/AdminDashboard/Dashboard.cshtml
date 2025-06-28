@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var todayBills = ViewBag.RecentActivities as List<dynamic>;
+    var todayBills = ViewBag.RecentActivities as List<ComillaCentralMedical.Models.Bill>;
 }
 
 <div class="container py-5">
@@ -13,14 +13,7 @@
                     <i class="bi bi-people-fill display-4"></i>
                     <h5 class="card-title mt-3">Today Invoices</h5>
                     <p class="display-4 fw-bold">
-                        @if (ViewBag.TodayInvoices != null)
-                        {
-                            @ViewBag.TodayInvoices.Count
-                        }
-                        else
-                        {
-                            @:0
-                        }
+                        @(ViewBag.TodayInvoices != null ? ViewBag.TodayInvoices.Count : 0)
                     </p>
                 </div>
             </div>
@@ -48,23 +41,64 @@
     <!-- Recent Activities -->
     <div class="mb-5">
         <h4 class="text-secondary mb-3">Recent Activities</h4>
-        @if (todayBills != null && todayBills.Count > 0)
+
+        @if (todayBills != null && todayBills.Any())
         {
-            <ul class="list-group">
-                @foreach (var bill in todayBills)
-                {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Bill #@bill.BillID for <strong>@bill.PatientName</strong> — ৳ @string.Format("{0:N2}", bill.TotalAmount)
-                        <span class="text-muted">@bill.CreatedAt.ToString("hh:mm tt")</span>
-                    </li>
-                }
-            </ul>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>Bill ID</th>
+                            <th>Patient Name</th>
+                            <th>Phone</th>
+                            <th>Total (৳)</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Created By</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var bill in todayBills)
+                        {
+                            string status;
+                            string statusClass;
+
+                            if (bill.IsReturned)
+                            {
+                                status = "Returned";
+                                statusClass = "text-danger";
+                            }
+                            else if (bill.IsConfirmed)
+                            {
+                                status = "Confirmed";
+                                statusClass = "text-success";
+                            }
+                            else
+                            {
+                                status = "Pending";
+                                statusClass = "text-warning";
+                            }
+
+                            <tr>
+                                <td>#@bill.BillID</td>
+                                <td>@bill.PatientName</td>
+                                <td>@bill.Phone</td>
+                                <td>@string.Format("{0:N2}", bill.TotalAmount)</td>
+                                <td class="@statusClass fw-bold">@status</td>
+                                <td>@bill.CreatedAt.ToString("hh:mm tt")</td>
+                                <td>@bill.CreatedBy</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         else
         {
             <p>No bills created today.</p>
         }
     </div>
+
 
     <!-- Quick Links -->
     <div class="mb-4">
@@ -73,7 +107,7 @@
             <a href="@Url.Action("ManageUsers", "ManageUsers")" class="btn btn-lg btn-outline-primary d-flex align-items-center">
                 <i class="bi bi-people me-2"></i> Manage Users
             </a>
-            <a href="@Url.Action("ManageServices", "ManageServices")" class="btn btn-lg btn-outline-success d-flex align-items-center">
+            <a href="@Url.Action("ManageServices", "ManageService")" class="btn btn-lg btn-outline-success d-flex align-items-center">
                 <i class="bi bi-tools me-2"></i> Manage Services
             </a>
         </div>
@@ -93,41 +127,13 @@
         background: linear-gradient(45deg, #ffc107, #d39e00);
     }
 
-    .timeline {
-        list-style: none;
-        padding: 0;
-    }
-
-    .timeline-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .timeline-icon {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        margin-right: 15px;
-    }
-
-    .timeline-content {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        flex-grow: 1;
-    }
-
     .btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 </style>
+
 @section PageSpecificButton {
     <a href="@Url.Action("ManageUsers", "ManageUsers")" class="btn btn-primary">Manage Users</a>
-    <a href="@Url.Action("ManageServices", "ManageServices")" class="btn btn-primary">Manage Services</a>
+    <a href="@Url.Action("ManageServices", "ManageService")" class="btn btn-primary">Manage Services</a>
 }

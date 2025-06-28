@@ -230,6 +230,10 @@
     <Compile Include="Migrations\202506282025367_RemoveAccountantSummary.Designer.cs">
       <DependentUpon>202506282025367_RemoveAccountantSummary.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506282142401_CreateServiceTable1.cs" />
+    <Compile Include="Migrations\202506282142401_CreateServiceTable1.Designer.cs">
+      <DependentUpon>202506282142401_CreateServiceTable1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Bill.cs" />
     <Compile Include="Models\BillItem.cs" />
@@ -382,6 +386,8 @@
     <Content Include="Views\Shared\_PendingBillTable.cshtml" />
     <Content Include="Views\Shared\_ConfirmedBillTable.cshtml" />
     <Content Include="Views\Shared\_ServiceTable.cshtml" />
+    <Content Include="Views\Shared\_UserProfile.cshtml" />
+    <Content Include="Views\User\Profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -446,6 +452,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506282025367_RemoveAccountantSummary.resx">
       <DependentUpon>202506282025367_RemoveAccountantSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506282142401_CreateServiceTable1.resx">
+      <DependentUpon>202506282142401_CreateServiceTable1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
