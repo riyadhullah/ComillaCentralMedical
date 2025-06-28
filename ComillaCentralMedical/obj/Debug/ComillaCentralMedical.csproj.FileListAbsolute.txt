@@ -30,7 +30,6 @@ D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedic
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.IO.Compression.ZipFile.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.IO.FileSystem.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.IO.FileSystem.Primitives.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.Net.Http.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.Net.Sockets.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.Reflection.Metadata.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
@@ -50,29 +49,6 @@ D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedic
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\vbc.rsp
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\VBCSCompiler.exe
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\roslyn\VBCSCompiler.exe.config
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Antlr3.Runtime.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\EntityFramework.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\EntityFramework.SqlServer.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Microsoft.Web.Infrastructure.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Newtonsoft.Json.Bson.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Newtonsoft.Json.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Buffers.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Memory.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Net.Http.Formatting.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Numerics.Vectors.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Runtime.CompilerServices.Unsafe.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Threading.Tasks.Extensions.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Helpers.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Http.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Http.WebHost.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Mvc.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Optimization.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.Razor.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.WebPages.Deployment.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.WebPages.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\System.Web.WebPages.Razor.dll
-D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\WebGrease.dll
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\EntityFramework.xml
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\EntityFramework.SqlServer.xml
 D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\bin\Newtonsoft.Json.xml
@@ -222,4 +198,8 @@ E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCen
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.csproj.CopyComplete
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.dll
 E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.pdb
-E:\.NET Project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.csproj.AssemblyReference.cache
+D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.BillCreate.resources
+D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.createtable.resources
+D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.createtable1.resources
+D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.createtable2.resources
+D:\all seamster slide\9th\.net\project\ComillaCentralMedical\ComillaCentralMedical\obj\Debug\ComillaCentralMedical.Migrations.createtable3.resources

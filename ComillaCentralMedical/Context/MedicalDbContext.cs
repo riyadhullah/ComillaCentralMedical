@@ -25,6 +25,7 @@ namespace ComillaCentralMedical.Context
         public virtual DbSet<Service> Services { get; set; }
         public virtual DbSet<Bill> Bills { get; set; }
         public virtual DbSet<BillItem> BillItems { get; set; }
+        public virtual DbSet<AccountantSummary> AccountantSummaries { get; set; }
     }
 
     //public class MyEntity

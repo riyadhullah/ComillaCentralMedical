@@ -161,6 +161,7 @@
     <Compile Include="Controllers\AdminDashboardController.cs" />
     <Compile Include="Controllers\API\BillApiController.cs" />
     <Compile Include="Controllers\API\ServiceApiController.cs" />
+    <Compile Include="Controllers\AccountantController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageServiceController.cs" />
     <Compile Include="Controllers\ManageUsersController.cs" />
@@ -209,7 +210,24 @@
     <Compile Include="Migrations\202506211638101_BillCreate.Designer.cs">
       <DependentUpon>202506211638101_BillCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202506272020592_createtable.cs" />
+    <Compile Include="Migrations\202506272020592_createtable.Designer.cs">
+      <DependentUpon>202506272020592_createtable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506272153120_createtable1.cs" />
+    <Compile Include="Migrations\202506272153120_createtable1.Designer.cs">
+      <DependentUpon>202506272153120_createtable1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506272201237_createtable2.cs" />
+    <Compile Include="Migrations\202506272201237_createtable2.Designer.cs">
+      <DependentUpon>202506272201237_createtable2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202506272204031_createtable3.cs" />
+    <Compile Include="Migrations\202506272204031_createtable3.Designer.cs">
+      <DependentUpon>202506272204031_createtable3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AccountantSummary.cs" />
     <Compile Include="Models\Bill.cs" />
     <Compile Include="Models\BillItem.cs" />
     <Compile Include="Models\MinimumAgeAttribute.cs" />
@@ -315,6 +333,13 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\01626383239.jpg" />
+    <Content Include="Uploads\01679420786.jpg" />
+    <Content Include="Uploads\01687652016.png" />
+    <Content Include="Uploads\01700000003.jpg" />
+    <Content Include="Uploads\01700000004.jpg" />
+    <Content Include="Uploads\01761621564.jpg" />
+    <Content Include="Uploads\IMG.png" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -334,6 +359,7 @@
     <Content Include="Views\ManageService\CreateService.cshtml" />
     <Content Include="Views\ManageService\EditService.cshtml" />
     <Content Include="Views\AdminDashboard\Dashboard.cshtml" />
+    <Content Include="Uploads\01761621560.pdf" />
     <Content Include="Views\ManageUsers\CreateUsers.cshtml" />
     <Content Include="Views\ManageUsers\Details.cshtml" />
     <Content Include="Views\ManageUsers\EditUser.cshtml" />
@@ -343,12 +369,13 @@
     <Content Include="Views\Receptionist\Details.cshtml" />
     <Content Include="Views\Receptionist\Edit.cshtml" />
     <Content Include="Views\Receptionist\Index.cshtml" />
-    <Content Include="Views\Receptionist\Print.cshtml" />
+    <Content Include="Views\Accountant\Pending.cshtml" />
+    <Content Include="Views\Accountant\Details.cshtml" />
+    <Content Include="Views\Accountant\Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Uploads\" />
-    <Folder Include="Views\ServiceApi\" />
+    <Folder Include="Views\Bill\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -393,6 +420,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202506211638101_BillCreate.resx">
       <DependentUpon>202506211638101_BillCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506272020592_createtable.resx">
+      <DependentUpon>202506272020592_createtable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506272153120_createtable1.resx">
+      <DependentUpon>202506272153120_createtable1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506272201237_createtable2.resx">
+      <DependentUpon>202506272201237_createtable2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202506272204031_createtable3.resx">
+      <DependentUpon>202506272204031_createtable3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

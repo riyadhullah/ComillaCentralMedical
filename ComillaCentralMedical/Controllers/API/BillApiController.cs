@@ -47,6 +47,7 @@ namespace ComillaCentralMedical.Controllers.API
 
             bill.CreatedAt = DateTime.Now;
             bill.IsConfirmed = false;
+            bill.IsReturned = false;
 
             db.Bills.Add(bill);
             db.SaveChanges();
@@ -59,15 +60,37 @@ namespace ComillaCentralMedical.Controllers.API
         public IHttpActionResult UpdateBill(int id, Bill updated)
         {
             var bill = db.Bills.Find(id);
-            if (bill == null || bill.IsConfirmed)
-                return BadRequest("Cannot edit a confirmed bill.");
+            if (bill == null)
+                return NotFound();
 
-            bill.PatientName = updated.PatientName;
-            bill.Phone = updated.Phone;
-            bill.OverallDiscountRate = updated.OverallDiscountRate;
-            bill.TotalAmount = updated.TotalAmount;
-            bill.IsReturned = false;
-            bill.ReturnReason = null;
+            // Update only confirmation and return properties if applicable
+            if (updated.IsConfirmed && !bill.IsConfirmed)
+            {
+                bill.IsConfirmed = true;
+                bill.ConfirmedBy = updated.ConfirmedBy ?? bill.ConfirmedBy;
+                bill.ConfirmedAt = DateTime.Now; // Set timestamp for confirmation
+            }
+
+            if (updated.IsReturned && !bill.IsReturned)
+            {
+                bill.IsReturned = true;
+                bill.ReturnReason = updated.ReturnReason;
+                bill.ReturnedAt = DateTime.Now; // Set timestamp for return
+            }
+
+            // Update editable fields only if bill is NOT confirmed
+            if (!bill.IsConfirmed)
+            {
+                bill.PatientName = updated.PatientName;
+                bill.Phone = updated.Phone;
+                bill.OverallDiscountRate = updated.OverallDiscountRate;
+                bill.TotalAmount = updated.TotalAmount;
+
+                // Reset return details if fields are updated
+                bill.IsReturned = false;
+                bill.ReturnReason = null;
+                bill.ReturnedAt = null;
+            }
 
             db.SaveChanges();
             return Ok("Bill updated.");
@@ -78,7 +101,10 @@ namespace ComillaCentralMedical.Controllers.API
         public IHttpActionResult DeleteBill(int id)
         {
             var bill = db.Bills.Find(id);
-            if (bill == null || bill.IsConfirmed)
+            if (bill == null)
+                return NotFound();
+
+            if (bill.IsConfirmed)
                 return BadRequest("Cannot delete confirmed bill.");
 
             db.Bills.Remove(bill);

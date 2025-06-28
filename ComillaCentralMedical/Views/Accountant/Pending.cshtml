@@ -1,0 +1,77 @@
+﻿@model List<ComillaCentralMedical.Models.Bill>
+@{
+    ViewBag.Title = "Pending Bills";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h2 class="text-primary">Pending Bills</h2>
+        </div>
+    </div>
+    <div class="mb-3 text-end">
+        @Html.ActionLink("Summary", "Report", "Accountant", null, new { @class = "btn btn-success" })
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Patient Name</th>
+                    <th>Phone</th>
+                    <th>Total Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var bill in Model) // Iterating through bills
+                    {
+                        <tr>
+                            <td class="text-center">@bill.BillID</td>
+                            <td class="text-center">@bill.PatientName</td>
+                            <td class="text-center">@bill.Phone</td>
+                            <td class="text-center">@(bill.TotalAmount?.ToString("F2") ?? "N/A") Tk</td>
+                            <td class="d-flex gap-2">
+                                @Html.ActionLink("Details", "Details", "Accountant",
+                                    new { id = bill.BillID },
+                                    new { @class = "btn btn-info btn-sm" })
+
+                                @using (Html.BeginForm("Confirm", "Accountant", FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    @Html.Hidden("id", bill.BillID)
+                                    <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Confirm this bill?');">Confirm</button>
+                                }
+                                
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No pending bills available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

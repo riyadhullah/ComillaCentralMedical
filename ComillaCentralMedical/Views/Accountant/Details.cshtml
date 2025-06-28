@@ -1,0 +1,64 @@
+﻿@model ComillaCentralMedical.Models.Bill
+
+@{
+    ViewBag.Title = "Bill Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Bill Details</h2>
+
+<dl class="dl-horizontal">
+    <dt>Patient Name</dt>
+    <dd>@Model.PatientName</dd>
+
+    <dt>Phone</dt>
+    <dd>@Model.Phone</dd>
+
+    <dt>Created At</dt>
+    <dd>@Model.CreatedAt.ToString("dd MMM yyyy hh:mm tt")</dd>
+
+    <dt>Created By</dt>
+    <dd>@Model.CreatedBy</dd>
+
+    <dt>Confirmed?</dt>
+    <dd>@(Model.IsConfirmed ? "Yes" : "No")</dd>
+
+    <dt>Overall Discount (%)</dt>
+    <dd>@(Model.OverallDiscountRate ?? 0)%</dd>
+
+    <dt>Total Amount</dt>
+    <dd>@(Model.TotalAmount.HasValue ? Model.TotalAmount.Value.ToString("F2") + " Tk" : "—")</dd>
+</dl>
+
+<h4>Service List</h4>
+
+@if (Model.BillItems != null && Model.BillItems.Any())
+{
+    <table class="table table-striped">
+        <tr>
+            <th>Service</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Discount (%)</th>
+            <th>Line Total</th>
+        </tr>
+        @foreach (var item in Model.BillItems)
+        {
+            <tr>
+                <td>@item.Service?.ServiceName</td>
+                <td>@item.Quantity</td>
+                <td>@item.UnitPrice Tk</td>
+                <td>@item.DiscountRate %</td>
+                <td>@item.TotalPrice.ToString("F2") Tk</td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p><i>No services added to this bill.</i></p>
+}
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

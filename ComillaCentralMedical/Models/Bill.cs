@@ -32,6 +32,8 @@ namespace ComillaCentralMedical.Models
 
         [Display(Name = "Is Confirmed")]
         public bool IsConfirmed { get; set; } = false;
+        [Display(Name = "Confirm At")]
+        public DateTime? ConfirmedAt { get; set; }
 
         [Display(Name = "Is Returned")]
         public bool IsReturned { get; set; } = false;
