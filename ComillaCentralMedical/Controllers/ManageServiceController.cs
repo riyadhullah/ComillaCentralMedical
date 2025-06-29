@@ -18,23 +18,29 @@ namespace ComillaCentralMedical.Controllers
             this.db = new MedicalDbContext();
         }
 
-        // GET: ManageServices
         public ActionResult ManageServices()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var services = db.Services.ToList();
             return View(services);
         }
 
-        // GET: CreateService
         public ActionResult CreateService()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             return View();
         }
 
-        // POST: CreateService
         [HttpPost]
         public ActionResult CreateService(Service service)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             if (ModelState.IsValid)
             {
                 db.Services.Add(service);
@@ -46,9 +52,11 @@ namespace ComillaCentralMedical.Controllers
             return View(service);
         }
 
-        // GET: EditService
         public ActionResult EditService(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var service = db.Services.Find(id);
             if (service == null)
             {
@@ -58,10 +66,12 @@ namespace ComillaCentralMedical.Controllers
             return View(service);
         }
 
-        // POST: EditService
         [HttpPost]
         public ActionResult EditService(Service service)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             if (ModelState.IsValid)
             {
                 db.Entry(service).State = EntityState.Modified;
@@ -73,9 +83,11 @@ namespace ComillaCentralMedical.Controllers
             return View(service);
         }
 
-
         public ActionResult DeleteService(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var user = db.Services.Find(id);
             if (user != null)
             {
@@ -86,10 +98,12 @@ namespace ComillaCentralMedical.Controllers
             return RedirectToAction("ManageServices");
         }
 
-
         [HttpGet]
         public ActionResult SearchServices(string search)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var services = db.Services.AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
@@ -105,6 +119,4 @@ namespace ComillaCentralMedical.Controllers
             return PartialView("_ServiceTable", result);
         }
     }
-
-
 }

@@ -18,13 +18,15 @@ namespace ComillaCentralMedical.Controllers
         {
             client = new HttpClient
             {
-                BaseAddress = new Uri("http://localhost:9118/") 
+                BaseAddress = new Uri("http://localhost:9118/")
             };
         }
 
-        // GET: Accountant/Pending
         public async Task<ActionResult> Pending()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var pendingBills = new List<Bill>();
 
             HttpResponseMessage response = await client.GetAsync("api/BillApi");
@@ -38,11 +40,12 @@ namespace ComillaCentralMedical.Controllers
             return View(pendingBills);
         }
 
-        // POST: Accountant/Confirm/5
         [HttpPost]
         public async Task<ActionResult> Confirm(int id)
         {
-            // Step 1: Get the bill from API
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage getResponse = await client.GetAsync($"api/BillApi/{id}");
             if (!getResponse.IsSuccessStatusCode)
             {
@@ -59,7 +62,6 @@ namespace ComillaCentralMedical.Controllers
                 return RedirectToAction("Pending");
             }
 
-            // Step 2: Update the bill
             bill.IsConfirmed = true;
             bill.ConfirmedBy = "Accountant";
             bill.ConfirmedAt = DateTime.Now;
@@ -70,7 +72,6 @@ namespace ComillaCentralMedical.Controllers
             HttpResponseMessage putResponse = await client.PutAsync($"api/BillApi/{id}", content);
             if (putResponse.IsSuccessStatusCode)
             {
-                // ✅ Step 3: Redirect to Print view instead of Pending
                 return RedirectToAction("Print", new { id });
             }
 
@@ -78,9 +79,11 @@ namespace ComillaCentralMedical.Controllers
             return RedirectToAction("Pending");
         }
 
-
         public async Task<ActionResult> Report()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             List<Bill> bills = new List<Bill>();
 
             using (HttpClient client = new HttpClient())
@@ -95,18 +98,16 @@ namespace ComillaCentralMedical.Controllers
                 }
             }
 
-            // Only confirmed bills
             bills = bills.Where(b => b.IsConfirmed).ToList();
 
             return View(bills);
         }
 
-
-
-
-        // GET: Accountant/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -118,9 +119,11 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-        // GET: Accountant/Print/5
         public async Task<ActionResult> Print(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -129,11 +132,14 @@ namespace ComillaCentralMedical.Controllers
             string json = await response.Content.ReadAsStringAsync();
             Bill bill = JsonConvert.DeserializeObject<Bill>(json);
 
-            return View("Print", bill); // Reuse the same Print.cshtml
+            return View("Print", bill);
         }
 
         public async Task<PartialViewResult> SearchPendingBills(string search)
         {
+            if (Session["FullName"] == null)
+                RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync("api/BillApi");
 
             List<Bill> bills = new List<Bill>();
@@ -156,6 +162,9 @@ namespace ComillaCentralMedical.Controllers
 
         public async Task<PartialViewResult> SearchConfirmedBills(string search)
         {
+            if (Session["FullName"] == null)
+                RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync("api/BillApi");
 
             List<Bill> bills = new List<Bill>();
@@ -175,8 +184,5 @@ namespace ComillaCentralMedical.Controllers
 
             return PartialView("_ConfirmedBillTable", filtered);
         }
-
-
-
     }
 }

@@ -15,9 +15,11 @@ namespace ComillaCentralMedical.Controllers
             db = new MedicalDbContext();
         }
 
-        // GET: Admin/Dashboard
         public ActionResult Dashboard()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var today = DateTime.Today;
 
             var todayBills = db.Bills
@@ -30,7 +32,6 @@ namespace ComillaCentralMedical.Controllers
                 .Where(b => b.IsConfirmed && b.TotalAmount.HasValue)
                 .Sum(b => b.TotalAmount.Value);
 
-            // ✅ Return full Bill objects (not anonymous)
             var recentActivities = db.Bills
                 .Where(b => DbFunctions.TruncateTime(b.CreatedAt) == today)
                 .ToList();

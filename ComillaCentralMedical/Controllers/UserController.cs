@@ -90,13 +90,16 @@ namespace ComillaCentralMedical.Controllers
 
         public ActionResult Profile(int id)
         {
+            if (Session["FullName"] == null)
+                RedirectToAction("Login", "User");
+
             var user = db.Users.FirstOrDefault(u => u.ID == id);
             if (user == null)
             {
                 return HttpNotFound();
             }
 
-            return View("Profile", user); // View name is "Profile.cshtml"
+            return View("Profile", user); 
         }
 
 

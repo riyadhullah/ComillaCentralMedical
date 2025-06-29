@@ -17,12 +17,14 @@ namespace ComillaCentralMedical.Controllers
         public ReceptionistController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:9118/"); // API port
+            client.BaseAddress = new Uri("http://localhost:9118/");
         }
 
-        // GET: Receptionist
         public async Task<ActionResult> Index()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             List<Bill> bills = new List<Bill>();
             HttpResponseMessage response = await client.GetAsync("api/BillApi");
 
@@ -35,9 +37,11 @@ namespace ComillaCentralMedical.Controllers
             return View(bills);
         }
 
-        // GET: Receptionist/Details/5
         public async Task<ActionResult> Details(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -49,9 +53,11 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-        // GET: Receptionist/Create
         public async Task<ActionResult> Create()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync("api/ServiceApi");
 
             if (response.IsSuccessStatusCode)
@@ -67,14 +73,14 @@ namespace ComillaCentralMedical.Controllers
             return View();
         }
 
-        // POST: Receptionist/Create
         [HttpPost]
         public async Task<ActionResult> Create(Bill bill)
         {
-            // Model-level validation (like Required, Regex, etc.)
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             if (!ModelState.IsValid)
             {
-                // Re-fetch services if returning to view
                 HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
                 if (serviceResponse.IsSuccessStatusCode)
                 {
@@ -88,19 +94,16 @@ namespace ComillaCentralMedical.Controllers
                 return View(bill);
             }
 
-            // ✅ Custom Validation #1: At least one service
             if (bill.BillItems == null || !bill.BillItems.Any())
             {
                 ModelState.AddModelError("", "At least one service must be added.");
             }
 
-            // ✅ Custom Validation #2: Overall Discount cannot be negative
             if (bill.OverallDiscountRate < 0)
             {
                 ModelState.AddModelError("OverallDiscountRate", "Overall discount cannot be negative.");
             }
 
-            // Return view with errors if any
             if (!ModelState.IsValid)
             {
                 HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
@@ -116,12 +119,10 @@ namespace ComillaCentralMedical.Controllers
                 return View(bill);
             }
 
-            // ✅ Set required fields before saving
             bill.CreatedAt = DateTime.Now;
             bill.IsConfirmed = false;
             bill.CreatedBy = "Receptionist";
 
-            // ✅ Send data to API
             string json = JsonConvert.SerializeObject(bill);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -130,10 +131,8 @@ namespace ComillaCentralMedical.Controllers
             if (response.IsSuccessStatusCode)
                 return RedirectToAction("Index");
 
-            // Fallback in case API fails
             ModelState.AddModelError("", "Failed to create bill. Please try again.");
 
-            // Reload services before returning
             HttpResponseMessage serviceReload = await client.GetAsync("api/ServiceApi");
             if (serviceReload.IsSuccessStatusCode)
             {
@@ -148,11 +147,11 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-
-        // GET: Receptionist/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            // Get bill
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -164,7 +163,6 @@ namespace ComillaCentralMedical.Controllers
             if (bill.IsConfirmed)
                 return new HttpStatusCodeResult(403, "Cannot edit confirmed bill.");
 
-            // 🔥 Load services for dropdown
             HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
             if (serviceResponse.IsSuccessStatusCode)
             {
@@ -179,15 +177,14 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-
-        // POST: Receptionist/Edit/5
         [HttpPost]
         public async Task<ActionResult> Edit(int id, Bill bill)
         {
-            // Validate
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             if (!ModelState.IsValid)
             {
-                // Refetch services if needed
                 HttpResponseMessage serviceResponse = await client.GetAsync("api/ServiceApi");
                 if (serviceResponse.IsSuccessStatusCode)
                 {
@@ -201,14 +198,12 @@ namespace ComillaCentralMedical.Controllers
                 return View(bill);
             }
 
-            // ✅ Ensure at least one service
             if (bill.BillItems == null || !bill.BillItems.Any())
             {
                 ModelState.AddModelError("", "Please add at least one service.");
                 return View(bill);
             }
 
-            // ✅ Fetch unit price and discount again from service DB to avoid tampering
             HttpResponseMessage serviceFetch = await client.GetAsync("api/ServiceApi");
             List<Service> allServices = new List<Service>();
 
@@ -218,7 +213,6 @@ namespace ComillaCentralMedical.Controllers
                 allServices = JsonConvert.DeserializeObject<List<Service>>(json);
             }
 
-            // ✅ Update UnitPrice, DiscountRate for each item and calculate subtotal
             double total = 0;
             foreach (var item in bill.BillItems)
             {
@@ -231,14 +225,11 @@ namespace ComillaCentralMedical.Controllers
                 }
             }
 
-            // ✅ Apply overall discount
             double overallDiscount = bill.OverallDiscountRate ?? 0;
             bill.TotalAmount = total * (1 - overallDiscount / 100);
 
-            // ✅ Keep original metadata intact
             bill.IsConfirmed = false;
 
-            // Update via API
             string updatedJson = JsonConvert.SerializeObject(bill);
             var content = new StringContent(updatedJson, Encoding.UTF8, "application/json");
             HttpResponseMessage response = await client.PutAsync($"api/BillApi/{id}", content);
@@ -253,10 +244,11 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-
-        // GET: Receptionist/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -268,10 +260,12 @@ namespace ComillaCentralMedical.Controllers
             return View(bill);
         }
 
-        // POST: Receptionist/Delete/5
         [HttpPost, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.DeleteAsync($"api/BillApi/{id}");
 
             if (response.IsSuccessStatusCode)
@@ -282,6 +276,9 @@ namespace ComillaCentralMedical.Controllers
 
         public async Task<ActionResult> Print(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync($"api/BillApi/{id}");
 
             if (!response.IsSuccessStatusCode)
@@ -293,9 +290,11 @@ namespace ComillaCentralMedical.Controllers
             return View("Print", bill);
         }
 
-
         public async Task<PartialViewResult> SearchBills(string search, bool confirmed)
         {
+            if (Session["FullName"] == null)
+                RedirectToAction("Login", "User");
+
             HttpResponseMessage response = await client.GetAsync("api/BillApi");
 
             List<Bill> bills = new List<Bill>();
@@ -318,7 +317,5 @@ namespace ComillaCentralMedical.Controllers
 
             return PartialView("_BillTable", filtered);
         }
-
-
     }
 }

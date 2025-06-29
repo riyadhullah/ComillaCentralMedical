@@ -13,15 +13,16 @@ namespace ComillaCentralMedical.Controllers
     public class ManageUsersController : Controller
     {
         public MedicalDbContext db;
-        public ManageUsersController() 
+        public ManageUsersController()
         {
             this.db = new MedicalDbContext();
         }
 
         public ActionResult ManageUsers()
         {
-            //if (Session["FullName"] == null)
-              //  return RedirectToAction("Login", "User");
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var users = db.Users.ToList();
             return View(users);
         }
@@ -40,12 +41,18 @@ namespace ComillaCentralMedical.Controllers
 
         public ActionResult CreateUsers()
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             return View();
         }
 
         [HttpPost]
         public ActionResult CreateUsers(User user, HttpPostedFileBase ImageFile)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             string confirmPassword = Request["ConfirmPassword"];
 
             if (user.Password != confirmPassword)
@@ -54,31 +61,26 @@ namespace ComillaCentralMedical.Controllers
                 return View(user);
             }
 
-            // ✅ Phone number uniqueness check
             if (db.Users.Any(u => u.Phone == user.Phone))
             {
                 ModelState.AddModelError("Phone", "Phone number already exists.");
             }
 
-            // ✅ Email uniqueness check
             if (db.Users.Any(u => u.Email == user.Email))
             {
                 ModelState.AddModelError("Email", "Email address already exists.");
             }
 
-            // ✅ Check if image is missing
             if (ImageFile == null || ImageFile.ContentLength == 0)
             {
                 ModelState.AddModelError("ImageFile", "Profile image is required.");
             }
 
-            // ✅ Stop if any errors
             if (!ModelState.IsValid)
             {
                 return View(user);
             }
 
-            // ✅ Image validation and saving
             var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
             string extension = Path.GetExtension(ImageFile.FileName).ToLower();
 
@@ -93,7 +95,6 @@ namespace ComillaCentralMedical.Controllers
             ImageFile.SaveAs(path);
             user.ImagePath = "/Uploads/" + fileName;
 
-            // ✅ Final object setup and save
             user.JoinDate = DateTime.Today;
             user.IsActive = false;
 
@@ -103,9 +104,11 @@ namespace ComillaCentralMedical.Controllers
             return RedirectToAction("ManageUsers");
         }
 
-
         public ActionResult Details(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var user = db.Users.Find(id);
             if (user == null)
             {
@@ -117,6 +120,9 @@ namespace ComillaCentralMedical.Controllers
 
         public ActionResult Delete(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var user = db.Users.Find(id);
             if (user != null)
             {
@@ -129,6 +135,9 @@ namespace ComillaCentralMedical.Controllers
 
         public ActionResult EditUser(int id)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             var user = db.Users.Find(id);
             if (user == null)
             {
@@ -138,10 +147,12 @@ namespace ComillaCentralMedical.Controllers
             return View(user);
         }
 
-        
         [HttpPost]
         public ActionResult EditUser(FormCollection form, HttpPostedFileBase ImageFile)
         {
+            if (Session["FullName"] == null)
+                return RedirectToAction("Login", "User");
+
             int id = int.Parse(form["ID"]);
             var user = db.Users.Find(id);
             if (user == null) return HttpNotFound();
@@ -153,7 +164,6 @@ namespace ComillaCentralMedical.Controllers
             {
                 TempData["PasswordError"] = "Password and Confirm Password do not match.";
                 return RedirectToAction("EditUser", new { id = user.ID });
-
             }
 
             user.FullName = form["FullName"];
@@ -168,7 +178,6 @@ namespace ComillaCentralMedical.Controllers
             if (DateTime.TryParse(form["DOB"], out DateTime dob)) user.DOB = dob;
             if (DateTime.TryParse(form["JoinDate"], out DateTime joinDate)) user.JoinDate = joinDate;
 
-            // Image upload
             if (ImageFile != null && ImageFile.ContentLength > 0)
             {
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
@@ -190,7 +199,5 @@ namespace ComillaCentralMedical.Controllers
             db.SaveChanges();
             return RedirectToAction("ManageUsers");
         }
-
-
     }
 }
