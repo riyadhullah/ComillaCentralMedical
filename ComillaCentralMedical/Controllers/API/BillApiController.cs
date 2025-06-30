@@ -13,7 +13,6 @@ namespace ComillaCentralMedical.Controllers.API
     {
         private MedicalDbContext db = new MedicalDbContext();
 
-        // GET: api/BillApi
         public IEnumerable<Bill> GetAllBills()
         {
             return db.Bills
@@ -22,8 +21,6 @@ namespace ComillaCentralMedical.Controllers.API
         }
 
 
-
-        // GET: api/BillApi/5
         [HttpGet]
         public IHttpActionResult GetBill(int id)
         {
@@ -38,7 +35,6 @@ namespace ComillaCentralMedical.Controllers.API
         }
 
 
-        // POST: api/BillApi
         [HttpPost]
         public IHttpActionResult CreateBill(Bill bill)
         {
@@ -55,7 +51,6 @@ namespace ComillaCentralMedical.Controllers.API
             return Ok(bill);
         }
 
-        // PUT: api/BillApi/5
         [HttpPut]
         public IHttpActionResult UpdateBill(int id, Bill updated)
         {
@@ -63,7 +58,6 @@ namespace ComillaCentralMedical.Controllers.API
             if (bill == null)
                 return NotFound();
 
-            // Update only confirmation and return properties if applicable
             if (updated.IsConfirmed && !bill.IsConfirmed)
             {
                 bill.IsConfirmed = true;
@@ -78,27 +72,22 @@ namespace ComillaCentralMedical.Controllers.API
                 bill.ReturnedAt = DateTime.Now;
             }
 
-            // Only allow editing if bill is not confirmed
             if (!bill.IsConfirmed)
             {
-                // Basic info
                 bill.PatientName = updated.PatientName;
                 bill.Phone = updated.Phone;
                 bill.OverallDiscountRate = updated.OverallDiscountRate;
                 bill.TotalAmount = updated.TotalAmount;
 
-                // Clear return info
                 bill.IsReturned = false;
                 bill.ReturnReason = null;
                 bill.ReturnedAt = null;
 
-                // 🔥 Remove old BillItems
                 db.BillItems.RemoveRange(bill.BillItems);
 
-                // 🔁 Add updated BillItems
                 foreach (var item in updated.BillItems)
                 {
-                    item.BillID = bill.BillID; // Important to set FK
+                    item.BillID = bill.BillID;
                     db.BillItems.Add(item);
                 }
             }
@@ -108,7 +97,6 @@ namespace ComillaCentralMedical.Controllers.API
         }
 
 
-        // DELETE: api/BillApi/5
         [HttpDelete]
         public IHttpActionResult DeleteBill(int id)
         {

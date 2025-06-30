@@ -13,6 +13,7 @@
             @Html.Partial("_UserProfile", Model)
             <div class="text-end mt-3">
                 <a class="btn btn-primary" href="@Url.Action("EditUser", "ManageUsers", new { id = Model.ID })">Edit</a>
+                <a class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this user?');" href="@Url.Action("Delete", "ManageUsers", new { id = Model.ID })">Delete</a>
                 <a class="btn btn-secondary" href="@Url.Action("ManageUsers", "ManageUsers")">Back</a>
             </div>
         </div>
